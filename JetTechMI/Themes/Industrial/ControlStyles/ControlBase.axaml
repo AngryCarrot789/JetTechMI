@@ -1,0 +1,49 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:JetTechMI.Themes.Industrial.Controls"
+                    xmlns:converters="clr-namespace:JetTechMI.Themes.Converters">
+
+    <Design.PreviewWith>
+        <controls:ControlBase Margin="10" Padding="6">
+            <TextBlock Text="OK" Background="Orange"/>
+        </controls:ControlBase>
+    </Design.PreviewWith>
+
+    <converters:SetThicknessConverter x:Key="PRIVATE_ControlBase_ThicknessTL" Right="0" Bottom="0"/>
+    <converters:SetThicknessConverter x:Key="PRIVATE_ControlBase_ThicknessBR" Left="0" Top="0"/>
+
+    <ControlTheme x:Key="{x:Type controls:ControlBase}" TargetType="{x:Type controls:ControlBase}">
+        <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border x:Name="PART_BorderBR" BorderBrush="Black" BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource PRIVATE_ControlBase_ThicknessBR}}"/> <!-- 0,0,2,2 -->
+                    <Border x:Name="PART_BorderTL" BorderBrush="White" BorderThickness="{TemplateBinding BorderThickness, Converter={StaticResource PRIVATE_ControlBase_ThicknessTL}}"/> <!-- 2,2,0,0 -->
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                      Margin="{TemplateBinding BorderThickness}"
+                                      Background="{TemplateBinding Background}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      BorderThickness="0"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      RecognizesAccessKey="True"
+                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[IsPressedIn=true]">
+            <Style Selector="^ /template/ Border#PART_BorderTL">
+                <Setter Property="BorderBrush" Value="Black"/>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_BorderBR">
+                <Setter Property="BorderBrush" Value="White"/>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

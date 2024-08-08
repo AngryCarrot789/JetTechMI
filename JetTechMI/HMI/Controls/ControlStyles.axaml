@@ -1,0 +1,170 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:JetTechMI.HMI.Controls"
+        xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons">
+    <Design.PreviewWith>
+        <StackPanel Spacing="10">
+            <b:JtButton Background="Yellow" Margin="10" Width="140" Height="60" Content="OK" Theme="{StaticResource SlightlyRaisedNoBaseJtButtonTheme}"/>
+            <b:JtButton Background="Yellow" Margin="10" Width="140" Height="60" Content="OK"/>
+            <b:JtButton Background="Yellow" Margin="10" Width="140" Height="60" Content="OK" Theme="{StaticResource RaisedNoBaseJtButtonTheme}"/>
+        </StackPanel>
+    </Design.PreviewWith>
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ControlTemplate x:Key="RaisedBasedJtButtonTemplate" TargetType="{x:Type b:JtButton}">
+                <Grid>
+                    <Border Background="{StaticResource AGreyBrush}" Margin="2"/>
+                    <Border BorderBrush="Black" BorderThickness="0,0,2,2"/>
+                    <Border BorderBrush="White" BorderThickness="2,2,0,0"/>
+
+                    <Border Background="{TemplateBinding Background}" Margin="6"/>
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                      Margin="6" Padding="{TemplateBinding Padding}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      RecognizesAccessKey="True"
+                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
+
+
+                    <Border x:Name="PART_BorderBR" Margin="6" BorderThickness="0,0,2,2" BorderBrush="Black"/>
+                    <Border x:Name="PART_BorderTL" Margin="6" BorderThickness="2,2,0,0" BorderBrush="White"/>
+                </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="RaisedNoBaseJtButtonTemplate" TargetType="{x:Type b:JtButton}">
+                <Border BorderBrush="Black" BorderThickness="1">
+                    <Grid>
+                        <Border Background="{StaticResource AGreyBrush}" Margin="2"/>
+                        <Border Background="{TemplateBinding Background}" Margin="2"/>
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Margin="2" Padding="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          CornerRadius="{TemplateBinding CornerRadius}"
+                                          RecognizesAccessKey="True"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+
+                        <Border x:Name="PART_BorderBR" BorderThickness="0,0,2,2" BorderBrush="{StaticResource ADarkGreyBrush}"/>
+                        <Border x:Name="PART_BorderTL" BorderThickness="2,2,0,0" BorderBrush="White"/>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+
+            <ControlTheme x:Key="{x:Type b:JtButton}" TargetType="{x:Type b:JtButton}">
+                <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+                <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+                <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template" Value="{StaticResource RaisedBasedJtButtonTemplate}"/>
+                <Style Selector="^[IsVisuallyPressed=true]">
+                    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                        <!-- Purely offsets the ContentPresenter 2 pixels towards the bottom right corner,
+                     to give the illusion of pushing it into the screen.
+                     Because PART_BorderTL and PART_BorderBR are placed after the content presenter,
+                     the 2 pixel gap of the content presenter is never seen when the button is pressed -->
+                        <Setter Property="Margin" Value="8,8,4,4"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderTL">
+                        <Setter Property="BorderBrush" Value="Black"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderBR">
+                        <Setter Property="BorderBrush" Value="White"/>
+                    </Style>
+                </Style>
+                <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="Opacity" Value="0.4"/>
+                </Style>
+            </ControlTheme>
+
+            <ControlTheme x:Key="RaisedNoBaseJtButtonTheme" TargetType="{x:Type b:JtButton}">
+                <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+                <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+                <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template" Value="{StaticResource RaisedNoBaseJtButtonTemplate}"/>
+                <Style Selector="^[IsVisuallyPressed=true]">
+                    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Margin" Value="4,4,0,0"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderTL">
+                        <Setter Property="BorderBrush" Value="{StaticResource ADarkGreyBrush}"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderBR">
+                        <Setter Property="BorderBrush" Value="{StaticResource AGreyBrush}"/>
+                    </Style>
+                </Style>
+                <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="Opacity" Value="0.4"/>
+                </Style>
+            </ControlTheme>
+
+            <ControlTheme x:Key="SlightlyRaisedNoBaseJtJtButtonTheme" TargetType="{x:Type b:JtButton}">
+                <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+                <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+                <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type b:JtButton}">
+                            <Border BorderBrush="Black" BorderThickness="1">
+                                <Grid>
+                                    <Border x:Name="PART_BorderBR1" BorderBrush="#696969" BorderThickness="0,0,1,1"/>
+                                    <Border x:Name="PART_BorderTL1" BorderBrush="White" BorderThickness="1,1,0,0"/>
+                                    <Border Background="{StaticResource AGreyBrush}" Margin="2"/>
+                                    <Border x:Name="PART_ContentBorder" Background="{TemplateBinding Background}" Margin="2">
+                                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                                          Margin="2"
+                                                          Padding="{TemplateBinding Padding}"
+                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          Content="{TemplateBinding Content}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                          CornerRadius="{TemplateBinding CornerRadius}"
+                                                          RecognizesAccessKey="True"/>
+                                    </Border>
+
+                                    <Border x:Name="PART_BorderBR2" Margin="1" BorderBrush="#696969" BorderThickness="0,0,1,1"/>
+                                    <Border x:Name="PART_BorderTL2" Margin="1" BorderBrush="White" BorderThickness="1,1,0,0"/>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style Selector="^[IsVisuallyPressed=true]">
+                    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Margin" Value="4,4,0,0"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderTL1">
+                        <Setter Property="BorderBrush" Value="#696969"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderBR1">
+                        <Setter Property="BorderBrush" Value="White"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderTL2">
+                        <Setter Property="BorderBrush" Value="#696969"/>
+                    </Style>
+                    <Style Selector="^ /template/ Border#PART_BorderBR2">
+                        <Setter Property="BorderBrush" Value="White"/>
+                    </Style>
+                </Style>
+                <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="Opacity" Value="0.4"/>
+                </Style>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

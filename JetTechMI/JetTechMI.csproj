@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.LinuxFramebuffer" Version="11.0.10"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
+        <PackageReference Include="System.IO.Ports" Version="9.0.0-preview.6.24327.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Themes\Industrial\Fonts\Mx437_DOS-V_re_ANK24.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_Acer710_Mono.ttf" />
+      <None Remove="Themes\Industrial\Fonts\ModernDOS9x14.ttf" />
+      <None Remove="Themes\Industrial\Fonts\ModernDOS9x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\AcPlus_IBM_VGA_8x14.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_IGS_VGA_9x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_IGS_VGA_8x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_ACM_VGA_9x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_IBM_VGA_8x14.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_IBM_BIOS.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_DOS-V_re_JPN24.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_ATI_8x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\8x16-ascii.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_ACM_VGA_8x16.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Mx437_DTK_BIOS.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-SemiBold.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-SemiBold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-Medium.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Italic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Italic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-SemiBold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_False.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_False.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-SemiBoldItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-SemiBoldItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-BoldItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-BoldItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-MediumItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-MediumItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Regular.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Regular.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-ExtraBold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\B612\B612-BoldItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_True.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_True.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ExtraLight.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ExtraLight.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ThinItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ThinItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\B612\B612-Regular.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Light.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Light.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Medium.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Medium.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Thin.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Thin.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Bold.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-Bold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\B612\B612-Bold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_True_437.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_True_437.ttf" />
+      <None Remove="Themes\Industrial\Fonts\PerfectDOS\Perfect DOS VGA 437.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_False_437.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\Flexi\Flexi_IBM_VGA_False_437.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-LightItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-LightItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-ExtraLight.ttf" />
+      <None Remove="Themes\Industrial\Fonts\B612\B612-Italic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\PerfectDOS\Perfect DOS VGA 437 Win.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-Light.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-Bold.ttf" />
+      <None Remove="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ExtraLightItalic.ttf" />
+      <AvaloniaResource Include="Themes\Industrial\Fonts\IBMPlexMono\IBMPlexMono-ExtraLightItalic.ttf" />
+      <None Remove="Themes\Industrial\Fonts\Oxanium\Oxanium-Regular.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="HMI\ControlData\" />
+    </ItemGroup>
+</Project>

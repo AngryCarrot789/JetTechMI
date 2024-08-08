@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <Color x:Key="AGreyColour">#cccccc</Color>
+    <Color x:Key="AMediumGreyColour">#F0F0F0</Color>
+    <Color x:Key="ADarkGreyColour">#888888</Color>
+    <SolidColorBrush x:Key="AGreyBrush" Color="{StaticResource AGreyColour}"/>
+    <SolidColorBrush x:Key="AMediumGreyBrush" Color="{StaticResource AMediumGreyColour}"/>
+    <SolidColorBrush x:Key="ADarkGreyBrush" Color="{StaticResource ADarkGreyColour}"/>
+</ResourceDictionary>

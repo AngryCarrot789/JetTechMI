@@ -1,0 +1,114 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <StackPanel Width="150" Height="200">
+            <Separator/>
+            <ComboBox>
+                <ComboBoxItem Content="Ello a"/>
+                <ComboBoxItem Content="Ello b"/>
+                <ComboBoxItem Content="Ello c"/>
+            </ComboBox>
+            <Separator/>
+            <ComboBox>
+                <ComboBoxItem Content="!!AA"/>
+                <ComboBoxItem Content="!!Ab"/>
+                <ComboBoxItem Content="!!Ac"/>
+                <ComboBoxItem Content="!!Ad"/>
+                <ComboBoxItem Content="!!Ae"/>
+            </ComboBox>
+        </StackPanel>
+    </Design.PreviewWith>
+    <ControlTheme x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+        <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+        <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="MinHeight" Value="20"/>
+        <Setter Property="PlaceholderForeground" Value="Black"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border BorderThickness="2,2,0,0" BorderBrush="{TemplateBinding BorderBrush}"/>
+                    <Border BorderThickness="0,0,2,2" BorderBrush="Black"/>
+                    <Grid>
+                        <Border Margin="1" Background="{StaticResource AGreyBrush}"/>
+                        <Border x:Name="PART_BorderBR" Margin="6" BorderBrush="White" BorderThickness="0,0,1,1"/>
+                        <Border x:Name="PART_BorderTL" Margin="6" BorderBrush="Black" BorderThickness="1,1,0,0"/>
+                        <Border x:Name="border" Margin="8" Background="{TemplateBinding Background}">
+                            <Grid ColumnDefinitions="*,Auto" Background="{TemplateBinding Background}">
+                                <TextBlock x:Name="PlaceholderTextBlock"
+                                           Grid.Column="0"
+                                           Margin="{TemplateBinding Padding}"
+                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                           Foreground="{TemplateBinding PlaceholderForeground}"
+                                           IsVisible="{TemplateBinding SelectionBoxItem, Converter={x:Static ObjectConverters.IsNull}}"
+                                           Text="{TemplateBinding PlaceholderText}"/>
+                                <ContentControl Grid.Column="0" Margin="{TemplateBinding Padding}"
+                                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                Content="{TemplateBinding SelectionBoxItem}"
+                                                ContentTemplate="{TemplateBinding ItemTemplate}"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                Foreground="{TemplateBinding Foreground}">
+                                    <ContentControl.Resources>
+                                        <!-- This is required to override default text block style -->
+                                        <ControlTheme x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Foreground" Value="Black"/>
+                                            <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+                                            <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+                                            <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+                                            <Style Selector="^:disabled">
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                            </Style>
+                                        </ControlTheme>
+                                    </ContentControl.Resources>
+                                </ContentControl>
+                                <ToggleButton x:Name="toggle"
+                                              Grid.Column="1"
+                                              ClickMode="Press"
+                                              Focusable="False"
+                                              IsChecked="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                                              Padding="6,0"
+                                              Theme="{StaticResource ComboBoxToggleButtonTheme}">
+                                    <Path Width="7"
+                                          Height="4"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z"
+                                          Fill="Black"
+                                          Stretch="Uniform"/>
+                                </ToggleButton>
+                                <Popup Grid.Column="0" x:Name="PART_Popup"
+                                       MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                                       MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                       IsLightDismissEnabled="True"
+                                       IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                                       PlacementTarget="{TemplateBinding}">
+                                    <Border Background="{StaticResource AGreyBrush}"
+                                            BorderBrush="Black"
+                                            BorderThickness="1">
+                                        <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                                      VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                                      IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}">
+                                            <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                                            ItemsPanel="{TemplateBinding ItemsPanel}"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:disabled /template/ Border#border">
+            <Setter Property="Opacity" Value="0.4"/>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+        <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+        <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter x:Name="PART_ContentPresenter"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  FontFamily="{TemplateBinding FontFamily}">
+                    <ContentPresenter.Resources>
+                        <ControlTheme x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="{StaticResource ASCII8X16_FONTSIZE}"/>
+                            <Setter Property="FontWeight" Value="{StaticResource ASCII8X16_FONTWEIGHT}"/>
+                            <Setter Property="FontFamily" Value="{StaticResource ASCII8X16}"/>
+                            <Style Selector="^:disabled">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Style>
+                        </ControlTheme>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
+        </Style>
+        <Style Selector="^:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource ADarkGreyBrush}"/>
+        </Style>
+        <Style Selector="^:selected:focus /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AMediumGreyBrush}"/>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

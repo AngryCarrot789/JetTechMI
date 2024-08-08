@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:a="clr-namespace:JetTechMI.HMI.Attached"
+             xmlns:controls="clr-namespace:JetTechMI.HMI.Controls"
+             xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JetTechMI.MainView">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Left">
+            <StackPanel DockPanel.Dock="Bottom">
+                <Button Click="RefreshPortListButton_OnClick" Content="Refresh" HorizontalAlignment="Stretch"/>
+                <Button Click="ConnectOrDisconnectButton_OnClick" Content="Connect" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+            <ListBox x:Name="PART_PortNameListBox" Width="200" Foreground="White"/>
+        </DockPanel>
+        <Grid Margin="10">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <!-- Click="ToggleStateButton_Click" -->
+                <b:JtButton WriteVariable="M0" ReadVariable="Y00" Content="LED 1" Padding="16,10"/>
+                <b:JtButton WriteVariable="M1" ReadVariable="Y01" Content="LED 2" Padding="16,10"/>
+                <b:JtButton WriteVariable="M2" ReadVariable="Y02" Content="LED 3" Padding="16,10"/>
+                <b:JtButton WriteVariable="M3" ReadVariable="Y03" Content="LED 4" Padding="16,10"/>
+                <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
+                <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
+                <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
+                <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
+                <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>
+                <b:JtButton WriteVariable="M8" ReadVariable="M6" Content="LED 8" Padding="16,10"/>
+                <b:JtButton WriteVariable="M9" ReadVariable="M6" Content="LED 9" Padding="16,10"/>
+                <b:JtButton WriteVariable="M10" ReadVariable="M10" Content="LED 10" Padding="16,10"/>
+                <b:JtButton WriteVariable="M11" ReadVariable="M11" Content="LED 11" Padding="16,10"/>
+                <b:JtButton WriteVariable="M12" ReadVariable="M12" Content="LED 12" Padding="16,10"/>
+                <b:JtButton WriteVariable="M13" ReadVariable="M13" Content="LED 13" Padding="16,10"/>
+                <b:JtButton WriteVariable="M14" ReadVariable="M14" Content="LED 14" Padding="16,10"/>
+                <b:JtButton WriteVariable="M15" ReadVariable="M15" Content="LED 15" Padding="16,10"/>
+                <b:JtButton WriteVariable="M16" ReadVariable="M16" Content="LED 16" Padding="16,10"/>
+                <b:JtButton WriteVariable="M17" ReadVariable="M17" Content="LED 17" Padding="16,10"/>
+                <b:JtButton WriteVariable="M18" ReadVariable="M18" Content="LED 18" Padding="16,10"/>
+                <b:JtButton WriteVariable="M19" ReadVariable="M19" Content="LED 19" Padding="16,10"/>
+                <b:JtButton WriteVariable="M20" ReadVariable="M20" Content="LED 20" Padding="16,10"/>
+                <b:JtButton WriteVariable="M21" ReadVariable="M21" Content="LED 21" Padding="16,10"/>
+                <b:JtButton WriteVariable="M22" ReadVariable="M22" Content="LED 22" Padding="16,10"/>
+                <b:JtButton WriteVariable="M23" ReadVariable="M23" Content="LED 23" Padding="16,10"/>
+                <b:JtButton WriteVariable="M24" ReadVariable="M24" Content="LED 24" Padding="16,10"/>
+                <b:JtButton WriteVariable="M25" ReadVariable="M25" Content="LED 25" Padding="16,10"/>
+                <b:JtButton WriteVariable="M26" ReadVariable="M26" Content="LED 26" Padding="16,10"/>
+                <b:JtButton WriteVariable="M27" ReadVariable="M27" Content="LED 27" Padding="16,10"/>
+                <b:JtButton WriteVariable="M28" ReadVariable="M28" Content="LED 28" Padding="16,10"/>
+                <b:JtButton WriteVariable="M29" ReadVariable="M29" Content="LED 29" Padding="16,10"/>
+                <b:JtButton WriteVariable="M30" ReadVariable="M30" Content="LED 30" Padding="16,10"/>
+                <b:JtButton WriteVariable="M31" ReadVariable="M31" Content="LED 31" Padding="16,10"/>
+                <b:JtButton WriteVariable="M32" ReadVariable="M32" Content="LED 32" Padding="16,10"/>
+                <b:JtButton WriteVariable="M33" ReadVariable="M33" Content="LED 33" Padding="16,10"/>
+                <b:JtButton WriteVariable="M34" ReadVariable="M34" Content="LED 34" Padding="16,10"/>
+                <b:JtButton WriteVariable="M35" ReadVariable="M35" Content="LED 35" Padding="16,10"/>
+                <b:JtButton WriteVariable="M36" ReadVariable="M36" Content="LED 36" Padding="16,10"/>
+                <b:JtButton WriteVariable="M37" ReadVariable="M37" Content="LED 37" Padding="16,10"/>
+                <b:JtButton WriteVariable="M38" ReadVariable="M38" Content="LED 38" Padding="16,10"/>
+                <b:JtButton WriteVariable="M39" ReadVariable="M39" Content="LED 39" Padding="16,10"/>
+                <b:JtButton WriteVariable="M40" ReadVariable="M40" Content="LED 40" Padding="16,10"/>
+                <b:JtButton WriteVariable="M41" ReadVariable="M41" Content="LED 41" Padding="16,10"/>
+                <b:JtButton WriteVariable="M42" ReadVariable="M42" Content="LED 42" Padding="16,10"/>
+                <b:JtButton WriteVariable="M43" ReadVariable="M43" Content="LED 43" Padding="16,10"/>
+                <b:JtButton WriteVariable="M44" ReadVariable="M44" Content="LED 44" Padding="16,10"/>
+            </WrapPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

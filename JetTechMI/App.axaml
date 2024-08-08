@@ -1,0 +1,45 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             x:Class="JetTechMI.App"
+             RequestedThemeVariant="Default">
+
+    <Application.Styles>
+        <SimpleTheme/>
+        <StyleInclude Source="Themes/Controls.axaml"/>
+        <StyleInclude Source="HMI/Controls/ControlStyles.axaml"/>
+        <StyleInclude Source="/Themes/Industrial/SimpleControls.axaml"/>
+
+        <!--
+        <industrial:IndustrialTheme/>
+        -->
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="Themes/Colours/SoftDark.axaml"/>
+                <MergeResourceInclude Source="Themes/ControlColours.axaml"/>
+                <MergeResourceInclude Source="Themes/Industrial/IndustrialColours.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <system:Double x:Key="ASCII8X16_FONTSIZE">24</system:Double>
+            <FontWeight x:Key="ASCII8X16_FONTWEIGHT">Bold</FontWeight>
+            <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts/IBMPlexMono#IBM Plex Mono</FontFamily>
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts/B612#B612</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts/Flexi#Flexi IBM VGA False (437)</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts/PerfectDOS#Perfect DOS VGA 437</FontFamily> -->
+
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts/Oxanium#Oxanium</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#8x16 ASCII</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 IGS VGA 9x16</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 IBM VGA 8x14</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 ACM VGA 8x16</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 ATI 8x16</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 DTK BIOS</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Modern DOS 9x14</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#Mx437 IBM BIOS</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">avares://JetTechMI/Themes/Industrial/Fonts#AcPlus IBM VGA 8x14</FontFamily> -->
+            <!-- <FontFamily x:Key="ASCII8X16">Consolas</FontFamily> -->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
