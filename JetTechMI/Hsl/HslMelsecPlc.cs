@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using HslCommunication;
-using HslCommunication.Profinet.Melsec;
+using HslCommunication.Core.Types;
+using HslCommunication.Devices.Melsec;
 using JetTechMI.HMI;
 using JetTechMI.Utils;
 
@@ -71,9 +72,9 @@ public class HslMelsecPlc : BasePlcAPI {
         ApplyOperations(this.plc, "X", request.ListForX, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));
         ApplyOperations(this.plc, "Y", request.ListForY, ref result.ListForY, (p, a, c) => p.ReadBool(a, c));
 
-        request.ListForM = new IntegerRangeList(); 
-        request.ListForM.AddRange(70, 1999);
-        ApplyOperations(this.plc, "M", request.ListForM, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));
+        // request.ListForM = new IntegerRangeList(); 
+        // request.ListForM.AddRange(70, 1999);
+        // ApplyOperations(this.plc, "M", request.ListForM, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));
     }
 
     public override PlcOperation<bool>     ReadBool(       string address               ) => WrapOperation(this.plc.ReadBool(address));

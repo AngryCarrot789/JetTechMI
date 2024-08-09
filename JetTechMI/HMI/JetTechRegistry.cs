@@ -42,12 +42,11 @@ public class JetTechRegistry {
                 try {
                     DateTime startTime = DateTime.Now;
                     this.ProcessAndSubmitBatchRequests();
-                    DateTime endTime = DateTime.Now;
-                    TimeSpan timeTaken = endTime - startTime;
+                    double millisTaken = (DateTime.Now - startTime).TotalMilliseconds;
 
                     await Dispatcher.UIThread.InvokeAsync(this.UpdateAllAsync);
-                    await Task.Delay(new TimeSpan(Math.Max(TimeSpan.FromMilliseconds(50).Ticks - timeTaken.Ticks, TimeSpan.FromMilliseconds(25).Ticks)));
-                    // await Task.Delay(50);
+                    // await Task.Delay(new TimeSpan(Math.Max(TimeSpan.FromMilliseconds(50).Ticks - timeTaken.Ticks, TimeSpan.FromMilliseconds(25).Ticks)));
+                    await Task.Delay(50);
                 }
                 catch (Exception e) {
                     Debug.WriteLine("Error during tick of registry: " + e);

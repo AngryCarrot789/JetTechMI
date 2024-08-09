@@ -90,4 +90,9 @@
     <ItemGroup>
       <Folder Include="HMI\ControlData\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\HslCommunication-Community\HslCommunication.Net8\HslCommunication.Net8.csproj" />
+      <ProjectReference Include="..\HslCommunication-Community\HslCommunication\HslCommunication.csproj" />
+    </ItemGroup>
 </Project>

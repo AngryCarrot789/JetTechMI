@@ -25,6 +25,7 @@
                 <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
+                <!--
                 <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
                 <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>
                 <b:JtButton WriteVariable="M8" ReadVariable="M6" Content="LED 8" Padding="16,10"/>
@@ -64,6 +65,7 @@
                 <b:JtButton WriteVariable="M42" ReadVariable="M42" Content="LED 42" Padding="16,10"/>
                 <b:JtButton WriteVariable="M43" ReadVariable="M43" Content="LED 43" Padding="16,10"/>
                 <b:JtButton WriteVariable="M44" ReadVariable="M44" Content="LED 44" Padding="16,10"/>
+                -->
             </WrapPanel>
         </Grid>
     </DockPanel>
