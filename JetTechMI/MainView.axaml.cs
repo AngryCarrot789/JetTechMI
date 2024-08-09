@@ -3,7 +3,6 @@ using System.IO.Ports;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
-using HslCommunication;
 using HslCommunication.Devices.Melsec;
 using JetTechMI.HMI;
 using JetTechMI.Hsl;
@@ -48,7 +47,7 @@ public partial class MainView : UserControl {
         }
         
         this.connection = new MelsecFxSerial() {
-            SleepTime = 2//, IsNewVersion = false
+            SleepTime = 0//, IsNewVersion = false
         };
         
         this.connection.SerialPortInni(selectedPort, 38400, 7, StopBits.One, Parity.Even);
