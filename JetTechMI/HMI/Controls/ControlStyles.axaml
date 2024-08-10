@@ -1,7 +1,9 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:JetTechMI.HMI.Controls"
-        xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons">
+        xmlns:c="clr-namespace:JetTechMI.HMI.Controls"
+        xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons"
+        xmlns:l="clr-namespace:JetTechMI.HMI.Controls.Entries"
+        xmlns:c1="clr-namespace:JetTechMI.Themes.Industrial.Controls">
     <Design.PreviewWith>
         <StackPanel Spacing="10">
             <b:JtButton Background="Yellow" Margin="10" Width="140" Height="60" Content="OK" Theme="{StaticResource SlightlyRaisedNoBaseJtButtonTheme}"/>
@@ -11,6 +13,47 @@
     </Design.PreviewWith>
     <Styles.Resources>
         <ResourceDictionary>
+            <ControlTheme x:Key="{x:Type c:NumericEntry}" TargetType="{x:Type c:NumericEntry}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ABrush.Tone8.Border.Static}"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="Padding" Value="8,2"/>
+                <Setter Property="DisplayText" Value="My number"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type c:NumericEntry}">
+                            <c1:ControlBase Padding="4" x:Name="PART_Root">
+                                <DockPanel>
+                                    <c1:ControlBase x:Name="PART_ButtonPresser" DockPanel.Dock="Right" Width="21" Margin="5,0,0,0"/>
+                                    <c1:ControlBase x:Name="PART_PressedTextArea" IsPressedIn="True">
+                                        <DockPanel Margin="{TemplateBinding Padding}" LastChildFill="False" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                            <TextBlock x:Name="PART_DisplayTextBlock"
+                                                       HorizontalAlignment="{TemplateBinding DisplayTextAlignment}"
+                                                       IsVisible="{TemplateBinding HasDisplayText}"
+                                                       Text="{TemplateBinding DisplayText}"
+                                                       DockPanel.Dock="{TemplateBinding DisplayTextPosition}"/>
+                                            <TextBlock x:Name="PART_ValueTextBlock"
+                                                       HorizontalAlignment="{TemplateBinding ValueTextAlignment}"
+                                                       DockPanel.Dock="{TemplateBinding ValueTextPosition}"/>
+                                        </DockPanel>
+                                    </c1:ControlBase>
+                                </DockPanel>
+                            </c1:ControlBase>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style Selector="^[IsPointerPressed=true]">
+                    <Style Selector="^/template/c1|ControlBase#PART_ButtonPresser">
+                        <Setter Property="IsPressedIn" Value="True"/>
+                    </Style>
+                    <Style Selector="^/template/c1|ControlBase#PART_PressedTextArea">
+                        <Setter Property="Background" Value="{StaticResource ADarkGreyBrush}"/>
+                    </Style>
+                </Style>
+            </ControlTheme>
+            
+            <ControlTheme x:Key="{x:Type l:JtNumericEntry}" TargetType="{x:Type l:JtNumericEntry}" BasedOn="{StaticResource {x:Type c:NumericEntry}}"/>
+            
             <ControlTemplate x:Key="RaisedBasedJtButtonTemplate" TargetType="{x:Type b:JtButton}">
                 <Grid>
                     <Border Background="{StaticResource AGreyBrush}" Margin="2"/>
@@ -33,7 +76,6 @@
                     <Border x:Name="PART_BorderTL" Margin="6" BorderThickness="2,2,0,0" BorderBrush="White"/>
                 </Grid>
             </ControlTemplate>
-
             <ControlTemplate x:Key="RaisedNoBaseJtButtonTemplate" TargetType="{x:Type b:JtButton}">
                 <Border BorderBrush="Black" BorderThickness="1">
                     <Grid>
@@ -54,7 +96,6 @@
                     </Grid>
                 </Border>
             </ControlTemplate>
-
             <ControlTheme x:Key="{x:Type b:JtButton}" TargetType="{x:Type b:JtButton}">
                 <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
                 <Setter Property="Foreground" Value="Black"/>
@@ -83,7 +124,6 @@
                     <Setter Property="Opacity" Value="0.4"/>
                 </Style>
             </ControlTheme>
-
             <ControlTheme x:Key="RaisedNoBaseJtButtonTheme" TargetType="{x:Type b:JtButton}">
                 <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
                 <Setter Property="Foreground" Value="Black"/>
@@ -108,7 +148,6 @@
                     <Setter Property="Opacity" Value="0.4"/>
                 </Style>
             </ControlTheme>
-
             <ControlTheme x:Key="SlightlyRaisedNoBaseJtJtButtonTheme" TargetType="{x:Type b:JtButton}">
                 <Setter Property="Background" Value="{StaticResource AGreyBrush}"/>
                 <Setter Property="Foreground" Value="Black"/>

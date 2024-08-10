@@ -2,12 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:a="clr-namespace:JetTechMI.HMI.Attached"
-             xmlns:controls="clr-namespace:JetTechMI.HMI.Controls"
              xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons"
+             xmlns:entries="clr-namespace:JetTechMI.HMI.Controls.Entries"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="JetTechMI.MainView">
-    <DockPanel>
+             x:Class="JetTechMI.Views.Pages.MainPage.MainPageView">
+<DockPanel>
         <DockPanel DockPanel.Dock="Left">
             <StackPanel DockPanel.Dock="Bottom">
                 <Button Click="RefreshPortListButton_OnClick" Content="Refresh" HorizontalAlignment="Stretch"/>
@@ -25,6 +24,7 @@
                 <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
+                <entries:JtNumericEntry ReadVariable="D0" WriteVariable="D0" NumericVariableType="Word"/>
                 <!--
                 <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
                 <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>

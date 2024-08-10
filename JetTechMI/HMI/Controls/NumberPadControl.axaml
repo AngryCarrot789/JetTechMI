@@ -1,0 +1,45 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:JetTechMI.Themes.Industrial.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JetTechMI.HMI.Controls.NumberPadControl"
+             Background="{StaticResource AGreyBrush}">
+    <Border BorderBrush="Black" BorderThickness="2">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" Background="#000088" Height="36" Margin="3">
+                <TextBlock Text="Edit numeric value" VerticalAlignment="Center" Padding="10,0" Foreground="White"/>
+            </Border>
+            <DockPanel Margin="10">
+                <Border DockPanel.Dock="Top" Background="{DynamicResource ABrush.Tone4.Background.Static}" Height="34">
+                    <controls:ControlBase IsPressedIn="True" BorderThickness="3">
+                        <TextBlock x:Name="PART_ValueBlock" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="4,0"/>
+                    </controls:ControlBase>
+                </Border>
+                <TextBlock x:Name="PART_RangeBlock" Text="Range HEre" DockPanel.Dock="Top" HorizontalAlignment="Center" Padding="2,5"/>
+                <Grid ColumnDefinitions="*,5,*,5,*,5,*" RowDefinitions="*,5,*,5,*,5,*" VerticalAlignment="Bottom">
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="0" Grid.Row="0" Content="7" x:Name="PART_Button7" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="2" Grid.Row="0" Content="8" x:Name="PART_Button8" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="4" Grid.Row="0" Content="9" x:Name="PART_Button9" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="6" Grid.Row="0" Content="CLR" x:Name="PART_ButtonCLR" Click="OnGridButtonClicked"/>
+
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="0" Grid.Row="2" Content="4" x:Name="PART_Button4" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="2" Grid.Row="2" Content="5" x:Name="PART_Button5" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="4" Grid.Row="2" Content="6" x:Name="PART_Button6" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="6" Grid.Row="2" Content="ESC" x:Name="PART_ButtonESC" Click="OnGridButtonClicked"/>
+
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="0" Grid.Row="4" Content="1" x:Name="PART_Button1" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="2" Grid.Row="4" Content="2" x:Name="PART_Button2" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="4" Grid.Row="4" Content="3" x:Name="PART_Button3" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="6" Grid.Row="4" Content="DEL" x:Name="PART_ButtonDEL" Click="OnGridButtonClicked"/>
+
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="0" Grid.Row="6" Content="+/-" x:Name="PART_ToggleNegativity" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="2" Grid.Row="6" Content="0" x:Name="PART_Button0" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="4" Grid.Row="6" Content="." x:Name="PART_InsertDot" Click="OnGridButtonClicked"/>
+                    <Button Theme="{StaticResource SlightlyRaisedNoBaseButtonTheme}" Height="60" Width="80" Grid.Column="6" Grid.Row="6" Content="ENT" x:Name="PART_ButtonENT" Click="OnGridButtonClicked"/>
+                </Grid>
+            </DockPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

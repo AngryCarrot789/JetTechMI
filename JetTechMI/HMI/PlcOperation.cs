@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace JetTechMI.HMI;
 
@@ -54,4 +55,6 @@ public readonly struct PlcOperation<TResult> {
             return new PlcOperation<T>(false, default!, this.ErrorCode, this.ErrorMessagte);
         return new PlcOperation<T>(true, func(this.Result), 0, null);
     }
+
+    public TResult? GetResultOr(TResult? def = default) => this.IsSuccessful ? this.Result : def;
 }

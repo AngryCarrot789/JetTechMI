@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace JetTechMI;
+namespace JetTechMI.Views;
 
 public partial class MainWindow : Window {
     public MainWindow() {

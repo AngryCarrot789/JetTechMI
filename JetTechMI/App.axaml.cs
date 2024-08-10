@@ -1,12 +1,24 @@
+using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using JetTechMI.HMI;
+using JetTechMI.HMI.Controls;
+using JetTechMI.Services;
+using JetTechMI.Services.Numeric;
 using JetTechMI.Utils;
+using JetTechMI.Views;
 
 namespace JetTechMI;
 
 public partial class App : Application {
+    private static readonly ServiceManager manager = new ServiceManager();
+    
+    public static IServiceManager Services => manager;
+    
     public App() {
         IntegerRangeList.Test(); 
     }
@@ -17,14 +29,64 @@ public partial class App : Application {
 
     public override void OnFrameworkInitializationCompleted() {
         JetTechRegistry.Instance.Run();
+
+        IMainView? view = null;
         
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
             desktop.MainWindow = new MainWindow();
+            view = ((MainWindow) desktop.MainWindow).PART_MainView;
         }
         else if (this.ApplicationLifetime is ISingleViewApplicationLifetime singleView) {
             singleView.MainView = new MainView();
+            view = (MainView) singleView.MainView;
         }
 
         base.OnFrameworkInitializationCompleted();
+        manager.Register<ITouchEntry>(new TouchEntryImpl(view));
+    }
+    
+    private class TouchEntryImpl : ITouchEntry {
+        private readonly IMainView? rootView;
+        private readonly EventHandler eventHandler;
+        private NumberPadControl? activeNumPad;
+        private TaskCompletionSource<double?>? currentTask;
+
+        public TouchEntryImpl(IMainView? rootView) {
+            this.rootView = rootView;
+            this.eventHandler = (sender, e) => {
+                NumberPadControl control = (NumberPadControl) sender!;
+                bool result = control.DialogResult;
+                double value = control.Value;
+                control.DialogResultChanged -= this.eventHandler;
+                this.rootView?.RemoveTopControl(control);
+
+                if (control == this.activeNumPad)
+                    this.activeNumPad = null;
+
+                this.currentTask?.SetResult(result ? value : null);
+                this.currentTask = null;
+            };
+        }
+
+        public Task<double?> ShowNumericAsync(double initialValue, double minValue = 0, double maxValue = Int32.MaxValue) {
+            if (this.rootView == null)
+                return Task.FromResult<double?>(null);
+
+            this.activeNumPad?.SetDialogResult(false);
+            if (this.currentTask != null)
+                throw new Exception("Did not expect current TCS to still exist");
+
+            this.activeNumPad = new NumberPadControl(minValue, maxValue, initialValue) {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Effect = new DropShadowEffect() { BlurRadius = 75, Color = Colors.Black, OffsetX = 0, OffsetY = 0, Opacity = 1 }
+            };
+
+            this.currentTask = new TaskCompletionSource<double?>();
+
+            this.rootView.AddTopControl(this.activeNumPad);
+            this.activeNumPad.DialogResultChanged += this.eventHandler;
+            return this.currentTask.Task;
+        }
     }
 }

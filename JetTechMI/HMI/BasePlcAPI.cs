@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace JetTechMI.HMI;
+﻿namespace JetTechMI.HMI;
 
 /// <summary>
 /// The base class for a PLC API
@@ -17,6 +15,7 @@ public abstract class BasePlcAPI : IPlcApi {
 
     public virtual PlcOperation<bool> ReadBool(string address) => this.ReadBoolArray(address, 1).Select(x => x[0]);
     public abstract PlcOperation<bool[]> ReadBoolArray(string address, ushort length);
+    public virtual PlcOperation<byte> ReadByte(string address) => this.ReadByteArray(address, 1).Select(x => x[0]);
     public abstract PlcOperation<byte[]> ReadByteArray(string address, ushort length);
     public virtual PlcOperation<short> ReadInt16(string address) => this.ReadInt16Array(address, 1).Select(x => x[0]);
     public abstract PlcOperation<short[]> ReadInt16Array(string address, ushort length);
@@ -36,22 +35,23 @@ public abstract class BasePlcAPI : IPlcApi {
     public abstract PlcOperation<double[]> ReadDoubleArray(string address, ushort length);
     public abstract PlcOperation<string> ReadString(string address, ushort length);
     public abstract PlcOperation WriteBool(string address, bool value);
+    public virtual PlcOperation WriteByte(string address, byte value) => this.WriteByteArray(address, new byte[] { value });
     public abstract PlcOperation WriteByteArray(string address, byte[] value);
-    public virtual PlcOperation WriteInt16(string address, short value) => this.WriteInt16Array(address, new short[] {value});
+    public virtual PlcOperation WriteInt16(string address, short value) => this.WriteInt16Array(address, new short[] { value });
     public abstract PlcOperation WriteInt16Array(string address, short[] values);
-    public virtual PlcOperation WriteUInt16(string address, ushort value) => this.WriteUInt16Array(address, new ushort[] {value});
+    public virtual PlcOperation WriteUInt16(string address, ushort value) => this.WriteUInt16Array(address, new ushort[] { value });
     public abstract PlcOperation WriteUInt16Array(string address, ushort[] values);
-    public virtual PlcOperation WriteInt32(string address, int value) => this.WriteInt32Array(address, new int[] {value});
+    public virtual PlcOperation WriteInt32(string address, int value) => this.WriteInt32Array(address, new int[] { value });
     public abstract PlcOperation WriteInt32Array(string address, int[] values);
-    public virtual PlcOperation WriteUInt32(string address, uint value) => this.WriteUInt32Array(address, new uint[] {value});
+    public virtual PlcOperation WriteUInt32(string address, uint value) => this.WriteUInt32Array(address, new uint[] { value });
     public abstract PlcOperation WriteUInt32Array(string address, uint[] values);
-    public virtual PlcOperation WriteFloat(string address, float value) => this.WriteFloatArray(address, new float[] {value});
+    public virtual PlcOperation WriteFloat(string address, float value) => this.WriteFloatArray(address, new float[] { value });
     public abstract PlcOperation WriteFloatArray(string address, float[] values);
-    public virtual PlcOperation WriteInt64(string address, long value) => this.WriteInt64Array(address, new long[] {value});
+    public virtual PlcOperation WriteInt64(string address, long value) => this.WriteInt64Array(address, new long[] { value });
     public abstract PlcOperation WriteInt64Array(string address, long[] values);
-    public virtual PlcOperation WriteUInt64(string address, ulong value) => this.WriteUInt64Array(address, new ulong[] {value});
+    public virtual PlcOperation WriteUInt64(string address, ulong value) => this.WriteUInt64Array(address, new ulong[] { value });
     public abstract PlcOperation WriteUInt64Array(string address, ulong[] values);
-    public virtual PlcOperation WriteDouble(string address, double value) => this.WriteDoubleArray(address, new double[] {value});
+    public virtual PlcOperation WriteDouble(string address, double value) => this.WriteDoubleArray(address, new double[] { value });
     public abstract PlcOperation WriteDoubleArray(string address, double[] values);
     public abstract PlcOperation WriteString(string address, string value);
     public abstract PlcOperation WriteString(string address, string value, int length);

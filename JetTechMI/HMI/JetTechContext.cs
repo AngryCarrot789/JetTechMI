@@ -79,6 +79,61 @@ public static class JtContextExtensions {
         return value = false;
     }
 
+    public static long? ReadInteger(this JetTechContext context, DeviceAddress address, int sizeInBytes) {
+        if (address.IsValid && context.TryGetPLC(address.Device, out IPlcApi? plc)) {
+            switch (address.AddressPrefix) {
+                case 'M': 
+                case 'S': 
+                case 'X':
+                case 'Y': return plc.ReadBool(address.FullAddress).GetResultOr() ? 1 : 0;
+                case 'C':
+                    if (sizeInBytes == 2 && address.AddressSlot > 199)
+                        return null;
+                    goto case 'T'; 
+                case 'D':
+                case 'T':
+                    switch (sizeInBytes) {
+                        case 1: return plc.ReadByte(address.FullAddress).GetResultOr();
+                        case 2: return plc.ReadInt16(address.FullAddress).GetResultOr();
+                        case 4: return plc.ReadInt32(address.FullAddress).GetResultOr();
+                        case 8: return plc.ReadInt64(address.FullAddress).GetResultOr();
+                    }
+                    break;
+            }
+        }
+
+        return null;
+    }
+    
+    public static double? ReadFloat(this JetTechContext context, DeviceAddress address, bool isSingle) {
+        if (address.IsValid && context.TryGetPLC(address.Device, out IPlcApi? plc)) {
+            switch (address.AddressPrefix) {
+                case 'M': 
+                case 'S': 
+                case 'X':
+                case 'Y': return plc.ReadBool(address.FullAddress).GetResultOr() ? 1D : 0D;
+                case 'C':
+                case 'D':
+                case 'T':
+                    return isSingle ? plc.ReadFloat(address.FullAddress).GetResultOr() : plc.ReadDouble(address.FullAddress).GetResultOr();
+            }
+        }
+
+        return null;
+    }
+    
+    public static bool TryReadInteger(this JetTechContext context, DeviceAddress address, int sizeInBytes, out long value) {
+        long? val = ReadInteger(context, address, sizeInBytes);
+        value = val ?? 0;
+        return val.HasValue;
+    }
+    
+    public static bool TryReadFloat(this JetTechContext context, DeviceAddress address, bool isSingle, out double value) {
+        double? val = ReadFloat(context, address, isSingle);
+        value = val ?? 0D;
+        return val.HasValue;
+    }
+
     public static bool TryReadBool(this JetTechContext context, PlcBatchResults batches, DeviceAddress address, out bool value) {
         if (batches.TryGetResultDataForDevice(address.Device, out PlcBatchResultData? data)) {
             Dictionary<int, bool>? dictionary = null;

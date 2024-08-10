@@ -1,18 +1,19 @@
 ﻿using System;
 using System.IO.Ports;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using HslCommunication.Devices.Melsec;
 using JetTechMI.HMI;
 using JetTechMI.Hsl;
 
-namespace JetTechMI;
+namespace JetTechMI.Views.Pages.MainPage;
 
-public partial class MainView : UserControl {
+public partial class MainPageView : UserControl, IPage {
     private MelsecFxSerial? connection;
     
-    public MainView() {
+    public MainView? MainView { get; set; }
+    
+    public MainPageView() {
         this.InitializeComponent();
         this.Loaded += OnLoaded;
         return;
@@ -21,7 +22,7 @@ public partial class MainView : UserControl {
             this.RefreshPortNames();
         }
     }
-
+    
     private void RefreshPortNames() {
         this.PART_PortNameListBox.Items.Clear();
         foreach (string name in SerialPort.GetPortNames()) {
@@ -75,12 +76,12 @@ public partial class MainView : UserControl {
         ((Button) sender!).Content = "Disconnect";
         JetTechContext.Instance.RegisterConnection(0, new HslMelsecPlc(this.connection));
     }
+    
+    public void ConnectPageToView(MainView mainView) {
+        this.MainView = mainView;
+    }
 
-    private void ToggleStateButton_Click(object? sender, RoutedEventArgs e) {
-        if (this.connection == null)
-            return;
-        
-        int channel = int.Parse(((ToggleButton) sender!).Tag!.ToString()!);
-        this.connection.Write("M" + channel, ((ToggleButton) sender!).IsChecked ?? false);
+    public void DisconnectPageFromView() {
+        this.MainView = null;
     }
 }

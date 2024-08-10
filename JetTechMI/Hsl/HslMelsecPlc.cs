@@ -30,13 +30,6 @@ public class HslMelsecPlc : BasePlcAPI {
         return true;
     }
 
-    private static readonly IntegerRangeList EmptyIntRangeList = new IntegerRangeList();
-
-    private static void ApplyOperation<T>(OperateResult<T> result, int index, ref Dictionary<int, T>? dictionary) {
-        if (result.IsSuccess)
-            (dictionary ??= new Dictionary<int, T>())[index] = result.Content;
-    }
-    
     private static void ApplyOperations<T>(MelsecFxSerial serial, string prefix, IntegerRangeList? list, ref Dictionary<int, T>? dictionary, Func<MelsecFxSerial, string, ushort, OperateResult<T[]>> operate) {
         if (list == null || list.IsEmpty) {
             return;
@@ -71,6 +64,7 @@ public class HslMelsecPlc : BasePlcAPI {
         ApplyOperations(this.plc, "X", request.ListForX, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));
         ApplyOperations(this.plc, "Y", request.ListForY, ref result.ListForY, (p, a, c) => p.ReadBool(a, c));
 
+        // Test to see what was causing performance issues
         // request.ListForM = new IntegerRangeList(); 
         // request.ListForM.AddRange(40, 1999);
         // ApplyOperations(this.plc, "M", request.ListForM, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));

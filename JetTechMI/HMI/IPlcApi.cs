@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace JetTechMI.HMI;
+﻿namespace JetTechMI.HMI;
 
 /// <summary>
 /// An interface for interacting with a PLC device
@@ -26,6 +24,7 @@ public interface IPlcApi {
     
     PlcOperation<bool> ReadBool(string address);
     PlcOperation<bool[]> ReadBoolArray(string address, ushort length);
+    PlcOperation<byte> ReadByte(string address);
     PlcOperation<byte[]> ReadByteArray(string address, ushort length);
     PlcOperation<short> ReadInt16(string address);
     PlcOperation<short[]> ReadInt16Array(string address, ushort length);
@@ -47,6 +46,7 @@ public interface IPlcApi {
     
     
     PlcOperation WriteBool(string address, bool value);
+    PlcOperation WriteByte(string address, byte value);
     PlcOperation WriteByteArray(string address, byte[] value);
     PlcOperation WriteInt16(string address, short value);
     PlcOperation WriteInt16Array(string address, short[] values);
