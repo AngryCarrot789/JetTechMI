@@ -17,28 +17,28 @@ On Raspberry PI:
     ssh <username>@<address>
         
   Delete any existing old app version files:
-    rm /home/reghzy/JetTechMI/* -r
+    rm /home/<username>/JetTechMI/* -r
 
 On windows:
   CD into the project directory and run build command:
     dotnet build -c Debug -r linux-arm64 -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true
   
   Copy files from windows to raspberry pi via SCP:
-    scp -r bin\Debug\net8.0\linux-arm64\* reghzy@192.168.1.208:/home/reghzy/BlueberryBenchSupply
+    scp -r bin\Debug\net8.0\linux-arm64\* <username>@<address>:/home/<username>/BlueberryBenchSupply
 
 On Raspberry PI:
   Setup permissions for application file
-    sudo chmod +x /home/reghzy/BlueberryBenchSupply/BlueberryBenchSupply
+    sudo chmod +x /home/<username>/BlueberryBenchSupply/BlueberryBenchSupply
   
   Run the executable with --drm parameter for avalonia:
-    /home/reghzy/BlueberryBenchSupply/BlueberryBenchSupply --drm
+    /home/<username>/BlueberryBenchSupply/BlueberryBenchSupply --drm
 
 For running the app when the Rasp PI boots, this is a bodged workaround but it works:
 Open the bash profile file:
     sudo nano ~/.bash_profile
 
 Then add this line:
-/home/reghzy/BlueberryBenchSupply/BlueberryBenchSupply --drm
+/home/<username>/BlueberryBenchSupply/BlueberryBenchSupply --drm
 
 ```
 
