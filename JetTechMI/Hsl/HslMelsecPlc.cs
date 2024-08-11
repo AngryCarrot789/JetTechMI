@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HslCommunication.Core.Types;
 using HslCommunication.Devices.Melsec;
 using JetTechMI.HMI;
@@ -35,18 +36,18 @@ public class HslMelsecPlc : BasePlcAPI {
         this.plc = plc;
     }
     
-    public override bool CheckConnection() {
+    public override LightOperationResult CheckConnection() {
         // THIS IS ASS CHEEKS!
         if (!this.IsConnected) {
             try {
                 this.plc.Open();
             }
             catch (Exception e) {
-                return false;
+                return new LightOperationResult(e.Message);
             }
         }
         
-        return true;
+        return LightOperationResult.CreateSuccessResult();
     }
 
     private static void ApplyOperations<T>(MelsecFxSerial serial, string prefix, IntegerRangeList? list, ref Dictionary<int, T>? dictionary, Func<MelsecFxSerial, string, ushort, OperateResult<T[]>> operate) {
@@ -74,6 +75,9 @@ public class HslMelsecPlc : BasePlcAPI {
         }
     }
     
+    private double[] avgs;
+    private int nextAvgIndx;
+    
     public override void ReadBatchedData(PlcBatchRequestData request, PlcBatchResultData result) {
         ApplyOperations(this.plc, "C", request.ListForC16, ref result.ListForC16, (p, a, c) => p.ReadUInt16(a, c));
         ApplyOperations(this.plc, "C", request.ListForC32, ref result.ListForC32, (p, a, c) => p.ReadInt32(a, c));
@@ -85,8 +89,15 @@ public class HslMelsecPlc : BasePlcAPI {
 
         // Test to see what was causing performance issues
         // request.ListForM = new IntegerRangeList(); 
-        // request.ListForM.AddRange(40, 1999);
+        // request.ListForM.AddRange(40, 500);
+        // DateTime start = DateTime.Now;
         // ApplyOperations(this.plc, "M", request.ListForM, ref result.ListForX, (p, a, c) => p.ReadBool(a, c));
+        // double millis = (DateTime.Now - start).TotalMilliseconds;
+        // double[] array = this.avgs ??= new double[10];
+        // if (this.nextAvgIndx == 10)
+        //     this.nextAvgIndx = 0;
+        // array[this.nextAvgIndx++] = millis;
+        // double totalTime = array.Average();
     }
 
     public override PlcOperation<bool>     ReadBool(       string address               ) => WrapOperation(this.plc.ReadBool(address));

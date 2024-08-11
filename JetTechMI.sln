@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JetTechMI.Demo", "JetTechMI.Demo\JetTechMI.Demo.csproj", "{3EDC2B2B-32D5-4B89-B923-BAEC2F85892F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +28,9 @@ Global
 		{1177A800-6402-4568-AC07-B48A362D127F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1177A800-6402-4568-AC07-B48A362D127F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1177A800-6402-4568-AC07-B48A362D127F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EDC2B2B-32D5-4B89-B923-BAEC2F85892F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EDC2B2B-32D5-4B89-B923-BAEC2F85892F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EDC2B2B-32D5-4B89-B923-BAEC2F85892F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EDC2B2B-32D5-4B89-B923-BAEC2F85892F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

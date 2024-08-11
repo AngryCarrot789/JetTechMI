@@ -17,6 +17,8 @@
 // along with JetTechMI. If not, see <https://www.gnu.org/licenses/>.
 // 
 
+using HslCommunication.Core.Types;
+
 namespace JetTechMI.HMI;
 
 /// <summary>
@@ -31,8 +33,11 @@ public interface IPlcApi {
     /// <summary>
     /// Called every so often to ensure the PLC is still connected. If not, attempt reconnection
     /// </summary>
-    /// <returns>True if already connected or the reconnection was successful</returns>
-    bool CheckConnection();
+    /// <returns>
+    /// True if already connected or the reconnection was successful.
+    /// Unsuccessful if an exception occurred, e.g. timeout while trying to connect
+    /// </returns>
+    LightOperationResult CheckConnection();
 
     /// <summary>
     /// Reads multiple addresses from this PLC device and places the resulting data in the result data object

@@ -58,14 +58,21 @@ public class JetTechRegistry {
     public void Run() {
         Task.Run(async () => {
             while (true) {
+                // The time between full refreshes. Too slow becomes visually unresponsive. Too fast becomes visually glitchy
+                TimeSpan RefreshInterval = TimeSpan.FromMilliseconds(300);
+                
+                // The absolute minimum time we can wait if the refresh took too long. This is to prevent stalling the UI
+                TimeSpan MinSleepForLongRefresh = TimeSpan.FromMilliseconds(25);
+                
                 try {
                     DateTime startTime = DateTime.Now;
+                    
                     this.ProcessAndSubmitBatchRequests();
-                    double millisTaken = (DateTime.Now - startTime).TotalMilliseconds;
-
                     await Dispatcher.UIThread.InvokeAsync(this.UpdateAllAsync);
-                    // await Task.Delay(new TimeSpan(Math.Max(TimeSpan.FromMilliseconds(50).Ticks - timeTaken.Ticks, TimeSpan.FromMilliseconds(25).Ticks)));
-                    await Task.Delay(50);
+                    
+                    TimeSpan fullRefreshTime = (DateTime.Now - startTime);
+
+                    await Task.Delay(new TimeSpan(Math.Max(RefreshInterval.Ticks - fullRefreshTime.Ticks, MinSleepForLongRefresh.Ticks)));
                 }
                 catch (Exception e) {
                     Debug.WriteLine("Error during tick of registry: " + e);
@@ -113,6 +120,7 @@ public class JetTechRegistry {
     }
 
     private void ProcessAndSubmitBatchRequests() {
+        this.batchesRequest.Clear();
         for (int i = 0; i < this.allControls.Count; i++) {
             IJtControlData data = this.allControls[i];
 
@@ -128,34 +136,25 @@ public class JetTechRegistry {
     }
 
     private async Task UpdateAllAsync() {
-        // ReSharper disable once ForCanBeConvertedToForeach
-        // This method must use a for-loop so that we don't run into concurrent list modification issues
+        const int ControlsPerGroup = 4;
         for (int i = 0; i < this.allControls.Count;) {
-            i = await this.UpdateGroup(i);
-            await Task.Delay(4);
+            for (; i < Math.Min(this.allControls.Count, i + ControlsPerGroup); i++) {
+                IJtControlData data = this.allControls[i];
+
+                try {
+                    await data.UpdateAsync(this.batchesData);
+                }
+                catch (Exception e) {
+                    Debug.WriteLine($"Exception while updating control '{data.Control}': " + e);
+                }
+            }
+            
+            await Task.Delay(2);
         }
 
         this.batchesData.Clear();
     }
 
-    private async Task<int> UpdateGroup(int index) {
-        const int groupCount = 5;
-        
-        int i = index;
-        for (; i < Math.Min(this.allControls.Count, index + groupCount); i++) {
-            IJtControlData data = this.allControls[i];
-
-            try {
-                await data.UpdateAsync(this.batchesData);
-            }
-            catch (Exception e) {
-                Debug.WriteLine($"Exception while updating control '{data.Control}': " + e);
-            }   
-        }
-
-        return i;
-    }
-    
     private class ControlTypeRegistration {
         private readonly Type controlType;
         private readonly Func<Control, IJtControlData> dataConstructor;

@@ -6,7 +6,7 @@
              xmlns:entries="clr-namespace:JetTechMI.HMI.Controls.Entries"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JetTechMI.Views.Pages.MainPage.MainPageView">
-<DockPanel>
+    <DockPanel>
         <DockPanel DockPanel.Dock="Left">
             <StackPanel DockPanel.Dock="Bottom">
                 <Button Click="RefreshPortListButton_OnClick" Content="Refresh" HorizontalAlignment="Stretch"/>
@@ -17,15 +17,27 @@
         <Grid Margin="10">
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <!-- Click="ToggleStateButton_Click" -->
-                <b:JtButton WriteVariable="M0" ReadVariable="Y00" Content="LED 1" Padding="16,10"/>
+                <b:JtButton WriteVariable="M0" ReadVariable="Y00" Padding="16,10" Width="200">
+                    <b:JtButton.Theme>
+                        <ControlTheme TargetType="{x:Type b:JtButton}" BasedOn="{StaticResource {x:Type b:JtButton}}">
+                            <Style Selector="^[IsVisuallyPressed=True]">
+                                <Setter Property="Content" Value="Motor ON"/>
+                                <Setter Property="Background" Value="LimeGreen"/>
+                            </Style>
+                            <Style Selector="^[IsVisuallyPressed=False]">
+                                <Setter Property="Content" Value="Motor OFF"/>
+                                <Setter Property="Background" Value="Red"/>
+                            </Style>
+                        </ControlTheme>
+                    </b:JtButton.Theme>
+                </b:JtButton>
                 <b:JtButton WriteVariable="M1" ReadVariable="Y01" Content="LED 2" Padding="16,10"/>
                 <b:JtButton WriteVariable="M2" ReadVariable="Y02" Content="LED 3" Padding="16,10"/>
                 <b:JtButton WriteVariable="M3" ReadVariable="Y03" Content="LED 4" Padding="16,10"/>
                 <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
-                <entries:JtNumericEntry ReadVariable="D0" WriteVariable="D0" NumericVariableType="Word"/>
-                <!--
+                <entries:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" ReadVariable="D0" WriteVariable="D0" NumericVariableType="Word" Minimum="0" Maximum="6000" Value="0" Width="240"/>
                 <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
                 <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>
                 <b:JtButton WriteVariable="M8" ReadVariable="M6" Content="LED 8" Padding="16,10"/>
@@ -37,7 +49,8 @@
                 <b:JtButton WriteVariable="M14" ReadVariable="M14" Content="LED 14" Padding="16,10"/>
                 <b:JtButton WriteVariable="M15" ReadVariable="M15" Content="LED 15" Padding="16,10"/>
                 <b:JtButton WriteVariable="M16" ReadVariable="M16" Content="LED 16" Padding="16,10"/>
-                <b:JtButton WriteVariable="M17" ReadVariable="M17" Content="LED 17" Padding="16,10"/>
+                <!--
+<b:JtButton WriteVariable="M17" ReadVariable="M17" Content="LED 17" Padding="16,10"/>
                 <b:JtButton WriteVariable="M18" ReadVariable="M18" Content="LED 18" Padding="16,10"/>
                 <b:JtButton WriteVariable="M19" ReadVariable="M19" Content="LED 19" Padding="16,10"/>
                 <b:JtButton WriteVariable="M20" ReadVariable="M20" Content="LED 20" Padding="16,10"/>

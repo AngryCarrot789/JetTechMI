@@ -37,6 +37,7 @@ public class JtButton : ContentControl {
     public static readonly DirectProperty<JtButton, bool> IsVisuallyPressedProperty = AvaloniaProperty.RegisterDirect<JtButton, bool>("IsVisuallyPressed", o => o.IsVisuallyPressed);
     public static readonly DirectProperty<JtButton, bool> IsPhysicallyPressedProperty = AvaloniaProperty.RegisterDirect<JtButton, bool>("IsPhysicallyPressed", o => o.IsPhysicallyPressed);
     public static readonly StyledProperty<bool> IsPhysicalPressingEnabledProperty = AvaloniaProperty.Register<JtButton, bool>("IsPhysicalPressingEnabled", true);
+    public static readonly StyledProperty<bool> PressVisuallyBeforeReadingStateProperty = AvaloniaProperty.Register<JtButton, bool>("PressVisuallyBeforeReadingState", true);
     
     public string? WriteVariable {
         get => this.GetValue(WriteVariableProperty);
@@ -71,6 +72,18 @@ public class JtButton : ContentControl {
     public bool IsPhysicalPressingEnabled {
         get => this.GetValue(IsPhysicalPressingEnabledProperty);
         set => this.SetValue(IsPhysicalPressingEnabledProperty, value);
+    }
+    
+    /// <summary>
+    /// Gets or sets whether to render the button as pressed before the actual press state has been received.
+    /// Setting this to true may result in visual glitching if there is a read variable or if the pressing of
+    /// this button does not actually result in the button being pressed (e.g. error in PLC code), however,
+    /// the button will respond instantly to pressing but may flash as un-pressed for a split second then become
+    /// pressed again
+    /// </summary>
+    public bool PressVisuallyBeforeReadingState {
+        get => this.GetValue(PressVisuallyBeforeReadingStateProperty);
+        set => this.SetValue(PressVisuallyBeforeReadingStateProperty, value);
     }
 
     private bool isVisuallyPressed, isPhysicallyPressed, isToggleActive;
@@ -194,8 +207,8 @@ public class JtButton : ContentControl {
         private IBrush? oldBrush;
 
         // public bool CanUpdateVisualPressedForWrite => string.IsNullOrEmpty(this.ReadVariable) || this.ReadVariable.Equals(this.WriteVariable);
-        // public bool CanUpdateVisualPressedForWrite => true;
-        public bool CanUpdateVisualPressedForWrite => !this.ReadVariable.IsValid;
+        public bool CanUpdateVisualPressedForWrite => this.Control.PressVisuallyBeforeReadingState;
+        // public bool CanUpdateVisualPressedForWrite => !this.ReadVariable.IsValid;
 
         public JtButtonControlData(JtButton control) : base(control) {
         }

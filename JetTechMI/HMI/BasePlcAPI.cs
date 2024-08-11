@@ -17,6 +17,8 @@
 // along with JetTechMI. If not, see <https://www.gnu.org/licenses/>.
 // 
 
+using HslCommunication.Core.Types;
+
 namespace JetTechMI.HMI;
 
 /// <summary>
@@ -28,7 +30,7 @@ public abstract class BasePlcAPI : IPlcApi {
     public BasePlcAPI() {
     }
 
-    public abstract bool CheckConnection();
+    public abstract LightOperationResult CheckConnection();
 
     public abstract void ReadBatchedData(PlcBatchRequestData request, PlcBatchResultData result);
 

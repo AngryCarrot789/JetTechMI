@@ -66,22 +66,11 @@ public partial class MainPageView : UserControl, IPage {
             return;
         }
         
-        this.connection = new MelsecFxSerial() {
-            SleepTime = 0//, IsNewVersion = false
-        };
+        this.connection = new MelsecFxSerial() { SleepTime = 0 };
+        this.connection.SetupSerial(selectedPort, 38400, 7, StopBits.One, Parity.Even);
         
-        this.connection.SerialPortInni(selectedPort, 38400, 7, StopBits.One, Parity.Even);
         try {
             this.connection.Open();
-            // var operation = this.connection.Open();
-            // if (operation == null || !operation.IsSuccess) {
-            //     this.connection.Dispose();
-            //     this.connection = null;
-            // 
-            //     ((Button) sender!).Content = "Error";
-            //     Console.WriteLine("Error connecting: " + operation?.ToMessageShowString());
-            //     return;
-            // }
         }
         catch (Exception ex) {
             this.connection.Close();
