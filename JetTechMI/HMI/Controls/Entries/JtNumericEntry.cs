@@ -21,13 +21,14 @@ using System;
 using System.Threading.Tasks;
 using Avalonia;
 using JetTechMI.HMI.Attached;
+using JetTechMI.Utils;
 
 namespace JetTechMI.HMI.Controls.Entries;
 
 public class JtNumericEntry : NumericEntry {
     public static readonly StyledProperty<string?> WriteVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("WriteVariable");
     public static readonly StyledProperty<string?> ReadVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("ReadVariable");
-    public static readonly StyledProperty<NumericVariableType> NumericVariableTypeProperty = AvaloniaProperty.Register<JtNumericEntry, NumericVariableType>("NumericVariableType");
+    public static readonly StyledProperty<NumericDataType> DataTypeProperty = AvaloniaProperty.Register<JtNumericEntry, NumericDataType>("DataType");
 
     public string? WriteVariable {
         get => this.GetValue(WriteVariableProperty);
@@ -39,9 +40,9 @@ public class JtNumericEntry : NumericEntry {
         set => this.SetValue(ReadVariableProperty, value);
     }
     
-    public NumericVariableType NumericVariableType {
-        get => this.GetValue(NumericVariableTypeProperty);
-        set => this.SetValue(NumericVariableTypeProperty, value);
+    public NumericDataType DateType {
+        get => this.GetValue(DataTypeProperty);
+        set => this.SetValue(DataTypeProperty, value);
     }
 
     static JtNumericEntry() {
@@ -78,12 +79,12 @@ public class JtNumericEntry : NumericEntry {
 
         public override async Task UpdateAsync(PlcBatchResults batches) {
             double? val;
-            switch (this.Control.NumericVariableType) {
-                case NumericVariableType.Float:  val = this.Context.ReadFloat(this.ReadVariable, false); break;
-                case NumericVariableType.Double: val = this.Context.ReadFloat(this.ReadVariable, true); break;
-                case NumericVariableType.Byte:   val = this.Context.ReadInteger(this.ReadVariable, 1); break;
-                case NumericVariableType.Word:   val = this.Context.ReadInteger(this.ReadVariable, 2); break;
-                case NumericVariableType.DWord:  val = this.Context.ReadInteger(this.ReadVariable, 4); break;
+            switch (this.Control.DateType) {
+                case NumericDataType.Float:  val = this.Context.ReadFloat(this.ReadVariable, false); break;
+                case NumericDataType.Double: val = this.Context.ReadFloat(this.ReadVariable, true); break;
+                case NumericDataType.Byte:   val = this.Context.ReadInteger(this.ReadVariable, 1); break;
+                case NumericDataType.Word:   val = this.Context.ReadInteger(this.ReadVariable, 2); break;
+                case NumericDataType.DWord:  val = this.Context.ReadInteger(this.ReadVariable, 4); break;
                 default: throw new ArgumentOutOfRangeException();
             }
 
@@ -100,12 +101,12 @@ public class JtNumericEntry : NumericEntry {
 
         public void SendNewValue(double value) {
             if (this.WriteVariable.IsValid && this.Context.TryGetPLC(this.WriteVariable, out IPlcApi? plc)) {
-                switch (this.Control.NumericVariableType) {
-                    case NumericVariableType.Float:  plc.WriteFloat(this.WriteVariable.FullAddress, (float) value); break;
-                    case NumericVariableType.Double: plc.WriteDouble(this.WriteVariable.FullAddress, value); break;
-                    case NumericVariableType.Byte:   plc.WriteByte(this.WriteVariable.FullAddress, (byte) value); break;
-                    case NumericVariableType.Word:   plc.WriteInt16(this.WriteVariable.FullAddress, (short) value); break;
-                    case NumericVariableType.DWord:  plc.WriteInt32(this.WriteVariable.FullAddress, (int) value); break;
+                switch (this.Control.DateType) {
+                    case NumericDataType.Float:  plc.WriteFloat(this.WriteVariable.FullAddress, (float) value); break;
+                    case NumericDataType.Double: plc.WriteDouble(this.WriteVariable.FullAddress, value); break;
+                    case NumericDataType.Byte:   plc.WriteByte(this.WriteVariable.FullAddress, (byte) value); break;
+                    case NumericDataType.Word:   plc.WriteInt16(this.WriteVariable.FullAddress, (short) value); break;
+                    case NumericDataType.DWord:  plc.WriteInt32(this.WriteVariable.FullAddress, (int) value); break;
                     default: throw new ArgumentOutOfRangeException();
                 }
             }

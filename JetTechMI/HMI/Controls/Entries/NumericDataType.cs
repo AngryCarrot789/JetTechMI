@@ -19,7 +19,7 @@
 
 namespace JetTechMI.HMI.Controls.Entries;
 
-public enum NumericVariableType {
+public enum NumericDataType {
     /// <summary>
     /// A 32-bit floating point number (single)
     /// </summary>
@@ -29,15 +29,27 @@ public enum NumericVariableType {
     /// </summary>
     Double, 
     /// <summary>
-    /// An 8-bit value
+    /// An unsigned 8-bit value
     /// </summary>
     Byte, 
     /// <summary>
-    /// A 16-bit value (short/ushort)
+    /// A signed 8-bit value
+    /// </summary>
+    SignedByte, 
+    /// <summary>
+    /// An unsigned 16-bit value (short/ushort)
     /// </summary>
     Word, 
     /// <summary>
-    /// A 32-bit value (int/uint)
+    /// A signed 16-bit value (short/ushort)
     /// </summary>
-    DWord
+    SignedWord, 
+    /// <summary>
+    /// An unsigned 32-bit value (int/uint)
+    /// </summary>
+    DWord,
+    /// <summary>
+    /// A signed 32-bit value (int/uint)
+    /// </summary>
+    SignedDWord
 }

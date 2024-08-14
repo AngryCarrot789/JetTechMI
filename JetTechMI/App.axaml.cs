@@ -74,9 +74,10 @@ public partial class App : Application {
             this.rootView = rootView;
             this.eventHandler = (sender, e) => {
                 NumberPadControl control = (NumberPadControl) sender!;
+                control.DialogResultChanged -= this.eventHandler;
+                
                 bool result = control.DialogResult;
                 double value = control.Value;
-                control.DialogResultChanged -= this.eventHandler;
                 this.rootView?.RemoveTopControl(control);
 
                 if (control == this.activeNumPad)

@@ -131,7 +131,21 @@ public class NumericEntry : RangeBase {
             e.IsKeypadOpen = false;
         });
 
-        // DisplayTextPositionProperty.Changed.AddClassHandler<NumericEntry, Dock>((o, e) => o.UpdateTextBlockPositions());
+        MinimumProperty.OverrideMetadata(typeof(NumericEntry), new StyledPropertyMetadata<double>(coerce: (o, d) => ((NumericEntry) o).OnCoerceMinimum(d)));
+        MaximumProperty.OverrideMetadata(typeof(NumericEntry), new StyledPropertyMetadata<double>(coerce: (o, d) => ((NumericEntry) o).OnCoerceMaximum(d)));
+        ValueProperty.OverrideMetadata(typeof(NumericEntry), new StyledPropertyMetadata<double>(coerce: (o, d) => ((NumericEntry) o).OnCoerceValue(d)));
+    }
+
+    protected virtual double OnCoerceMinimum(double value) {
+        return value;
+    }
+    
+    protected virtual double OnCoerceMaximum(double value) {
+        return value;
+    }
+    
+    protected virtual double OnCoerceValue(double value) {
+        return value;
     }
 
     private void UpdateValueText() {
