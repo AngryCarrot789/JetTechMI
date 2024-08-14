@@ -17,13 +17,13 @@
 // along with JetTechMI. If not, see <https://www.gnu.org/licenses/>.
 // 
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace JetTechMI.Utils;
 
-public class DictionaryList<TValue> {
+public class DictionaryList<TValue> : IReadOnlyList<TValue?> {
     public List<TValue?> List { get; }
 
     public DictionaryList(List<TValue?> list) {
@@ -32,12 +32,12 @@ public class DictionaryList<TValue> {
 
     public DictionaryList() : this(new List<TValue?>()) {
     }
+
+    public bool IsSet(int index) => index < this.List.Count && this.List[index] != null;
     
     public void Set(int index, TValue value) {
         if ((index + 1) > this.List.Count)
             this.List.FillToCapacity(index + 1);
-        else if (this.List[index] != null)
-            throw new InvalidOperationException("Index already in use: " + index);
         this.List[index] = value;
     }
     
@@ -72,4 +72,12 @@ public class DictionaryList<TValue> {
         value = default;
         return false;
     }
+
+    public IEnumerator<TValue?> GetEnumerator() => this.List.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+
+    public int Count => this.List.Count;
+
+    public TValue? this[int index] => this.List[index];
 }

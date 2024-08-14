@@ -32,7 +32,7 @@ class Program {
     [STAThread]
     public static int Main(string[] args) {
 
-        IntegerRangeList list = new IntegerRangeList();
+        // IntegerRangeMap<string>.Test();
         
         AppBuilder builder = BuildAvaloniaApp();
         if (args.Contains("--drm")) {

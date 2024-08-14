@@ -82,7 +82,7 @@ public partial class MainPageView : UserControl, IPage {
         }
 
         ((Button) sender!).Content = "Disconnect";
-        JetTechContext.Instance.RegisterConnection(0, new HslMelsecPlc(this.connection));
+        JetTechContext.Instance.RegisterConnection(new HslMelsecPlc(this.connection, 0));
     }
     
     public void ConnectPageToView(MainView mainView) {

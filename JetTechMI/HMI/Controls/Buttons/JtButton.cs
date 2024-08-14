@@ -25,6 +25,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using HslCommunication.Core.Types;
 using JetTechMI.HMI.Attached;
 
 namespace JetTechMI.HMI.Controls.Buttons;
@@ -87,6 +88,7 @@ public class JtButton : ContentControl {
     }
 
     private bool isVisuallyPressed, isPhysicallyPressed, isToggleActive;
+    private long ticksSincePhysicallyPressed;
 
     public JtButton() {
     }
@@ -127,6 +129,7 @@ public class JtButton : ContentControl {
     }
 
     private void OnPressedCore() {
+        this.ticksSincePhysicallyPressed = DateTime.Now.Ticks;
         this.IsPhysicallyPressed = true;
         
         JtButtonControlData? data = (JtButtonControlData?) JtCommon.GetRegisteredControlData(this);
@@ -200,9 +203,9 @@ public class JtButton : ContentControl {
     }
 
     private class JtButtonControlData : BaseControlData<JtButton> {
-        public DeviceAddress WriteVariable { get; set; }
-        public DeviceAddress ReadVariable { get; set; }
-        public DeviceAddress EnablingVariable { get; set; }
+        public DeviceAddress? WriteVariable { get; set; }
+        public DeviceAddress? ReadVariable { get; set; }
+        public DeviceAddress? EnablingVariable { get; set; }
 
         private IBrush? oldBrush;
 
@@ -213,13 +216,13 @@ public class JtButton : ContentControl {
         public JtButtonControlData(JtButton control) : base(control) {
         }
 
-        public override void SubmitBatchData(PlcBatchRequest data) {
+        public override void SubmitBatchData(BatchRequestList data) {
             base.SubmitBatchData(data);
-            data.TryRequest(this.EnablingVariable);
-            data.TryRequest(this.ReadVariable);
+            data.TryRequest(this.EnablingVariable, DataSize.Bit);
+            data.TryRequest(this.ReadVariable, DataSize.Bit);
         }
 
-        public override async Task UpdateAsync(PlcBatchResults batches) {
+        public override async Task UpdateAsync(BatchResultList batches) {
             // A cool light show that shows how the updating happens in real time
             if (this.oldBrush == null) {
                 this.oldBrush = this.Control.Background;
@@ -230,14 +233,18 @@ public class JtButton : ContentControl {
                 this.oldBrush = null;
             }
 
-            if (this.Context.TryGetPLC(this.EnablingVariable.Device, out _))
-                this.Control.IsEnabled = !this.EnablingVariable.IsValid || (this.Context.TryReadBool(batches, this.EnablingVariable, out bool value) && value);
+            if (this.EnablingVariable == null)
+                this.Control.IsEnabled = true;
+            else if (this.EnablingVariable == null || this.Context.TryGetPLC(this.EnablingVariable.Device, out _))
+                this.Control.IsEnabled = (this.TryReadBool(batches, this.EnablingVariable, out bool value) && value);
             else
                 this.Control.IsEnabled = false;
 
-            if (this.ReadVariable.IsValid && this.Context.TryReadBool(batches, this.ReadVariable, out bool isPressed)) {
-                this.Control.IsVisuallyPressed = isPressed;
-                this.Control.isToggleActive = isPressed;
+            if (this.Control.ticksSincePhysicallyPressed == 0 || (DateTime.Now.Ticks - this.Control.ticksSincePhysicallyPressed) > TimeSpan.FromMilliseconds(250).Ticks) {
+                if (this.ReadVariable != null && this.TryReadBool(batches, this.ReadVariable, out bool isPressed)) {
+                    this.Control.IsVisuallyPressed = isPressed;
+                    this.Control.isToggleActive = isPressed;
+                }
             }
         }
 
@@ -253,11 +260,11 @@ public class JtButton : ContentControl {
         public void SendDeactivate() => this.SendSignal(false);
 
         private void SendSignal(bool signal) {
-            if (this.WriteVariable.IsValid && this.Context.TryGetPLC(this.WriteVariable, out IPlcApi? plc)) {
+            if (this.WriteVariable != null && this.Context.TryGetPLC(this.WriteVariable, out ILogicController? plc)) {
                 Debug.WriteLine("Sending " + (signal ? "HIGH" : "LOW"));
-                PlcOperation operation = plc.WriteBool(this.WriteVariable.FullAddress, signal);
-                if (!operation.IsSuccessful) {
-                    Debug.WriteLine("Error sending bool: " + operation.ErrorMessagte);
+                LightOperationResult operation = plc.WriteBool(this.WriteVariable.Address, signal);
+                if (!operation.IsSuccess) {
+                    Debug.WriteLine("Error sending bool: " + operation.Message);
                 }
             }
         }

@@ -20,7 +20,6 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
-using HslCommunication.Devices.Melsec;
 using JetTechMI.Views.Pages;
 using JetTechMI.Views.Pages.MainPage;
 

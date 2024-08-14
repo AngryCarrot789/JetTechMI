@@ -22,7 +22,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Utilities;
 
 namespace JetTechMI.HMI.Controls;

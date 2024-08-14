@@ -18,9 +18,10 @@
 // 
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Threading;
+using HslCommunication.Core.Types;
 using JetTechMI.Utils;
 
 namespace JetTechMI.HMI;
@@ -31,31 +32,50 @@ namespace JetTechMI.HMI;
 public class JetTechContext {
     public static JetTechContext Instance { get; } = new JetTechContext();
 
-    private readonly DictionaryList<IPlcApi> connections;
+    private readonly DictionaryList<ILogicController> connections;
     private readonly DispatcherTimer reconnectTimer;
-    
+
+    public BatchRequestList BatchRequestList { get; }
+
+    public BatchResultList BatchResultList { get; }
+
     public JetTechContext() {
-        this.connections = new DictionaryList<IPlcApi>();
+        this.connections = new DictionaryList<ILogicController>();
         this.reconnectTimer = new DispatcherTimer(DispatcherPriority.Background) {
             Interval = TimeSpan.FromSeconds(2)
         };
         
         this.reconnectTimer.Tick += this.OnTickReconnectDevices;
         this.reconnectTimer.Start();
+
+        this.BatchRequestList = new BatchRequestList(new DictionaryList<BatchRequestInfo>());
+        this.BatchResultList = new BatchResultList();
     }
 
     private void OnTickReconnectDevices(object? sender, EventArgs e) {
-        foreach (IPlcApi? plc in this.connections.List) {
-            plc?.CheckConnection();
+        foreach (ILogicController? plc in this.connections.List) {
+            LightOperationResult result = plc!.CheckConnection();
+            if (!result.IsSuccess)
+                Debug.WriteLine("Failed to reconnect PLC #" + plc.Id + ": " + result.Message);
         }
     }
 
-    public void RegisterConnection(int id, IPlcApi api) {
-        if (api == null)
-            throw new ArgumentNullException(nameof(api));
+    /// <summary>
+    /// Registers the PLC. <see cref="ILogicController.Id"/> will be accessed
+    /// </summary>
+    /// <param name="plc"></param>
+    /// <exception cref="ArgumentNullException">PLC is null</exception>
+    public void RegisterConnection(ILogicController plc) {
+        if (plc == null)
+            throw new ArgumentNullException(nameof(plc));
+
+        if (this.connections.IsSet(plc.Id))
+            throw new InvalidOperationException("PLC already registered with ID " + plc.Id);
         
-        this.connections.Set(id, api);
-        api.CheckConnection();
+        this.connections.Set(plc.Id, plc);
+        this.BatchRequestList.Requests.Set(plc.Id, plc.CreateRequestData());
+        this.BatchResultList.Results.Set(plc.Id, plc.CreateResultData());
+        plc.CheckConnection();
     }
     
     public bool UnregisterConnection(int id) {
@@ -68,105 +88,19 @@ public class JetTechContext {
     /// <param name="id">The PLC connection ID</param>
     /// <param name="plcApi">The PLC device</param>
     /// <returns></returns>
-    public bool TryGetPLC(int id, [NotNullWhen(true)] out IPlcApi? plcApi) {
+    public bool TryGetPLC(int id, [NotNullWhen(true)] out ILogicController? plcApi) {
         return this.connections.TryGet(id, out plcApi) && plcApi.IsConnected;
     }
     
-    public bool TryGetPLC(DeviceAddress address, [NotNullWhen(true)] out IPlcApi? plcApi) {
+    public bool TryGetPLC(DeviceAddress address, [NotNullWhen(true)] out ILogicController? plcApi) {
         return this.TryGetPLC(address.Device, out plcApi);
     }
 
-    public void SubmitBatchRequestData(PlcBatchRequest requests, PlcBatchResults results) {
-        foreach (PlcBatchRequestData? info in requests.Requests.List) {
-            if (info != null && this.TryGetPLC(info.Device, out IPlcApi? api)) {
-                api.ReadBatchedData(info, results.GetResultDataForDevice(info.Device));
+    public void SubmitBatchRequestData(BatchRequestList requestList, BatchResultList resultList) {
+        foreach (BatchRequestInfo? info in requestList.Requests.List) {
+            if (info != null && this.TryGetPLC(info.Device, out ILogicController? api) && resultList.TryGetResultDataForDevice(info.Device, out BatchResultData? results)) {
+                api.ReadBatchedData(info, results);
             }
         }
-    }
-}
-
-public static class JtContextExtensions {
-    public static bool TryReadBool(this JetTechContext context, DeviceAddress address, out bool value) {
-        if (address.IsValid && context.TryGetPLC(address.Device, out IPlcApi? plc)) {
-            PlcOperation<bool> operation = plc.ReadBool(address.FullAddress);
-            if (operation.IsSuccessful) {
-                value = operation.Result;
-                return true;
-            }
-        }
-
-        return value = false;
-    }
-
-    public static long? ReadInteger(this JetTechContext context, DeviceAddress address, int sizeInBytes) {
-        if (address.IsValid && context.TryGetPLC(address.Device, out IPlcApi? plc)) {
-            switch (address.AddressPrefix) {
-                case 'M': 
-                case 'S': 
-                case 'X':
-                case 'Y': return plc.ReadBool(address.FullAddress).GetResultOr() ? 1 : 0;
-                case 'C':
-                    if (sizeInBytes == 2 && address.AddressSlot > 199)
-                        return null;
-                    goto case 'T'; 
-                case 'D':
-                case 'T':
-                    switch (sizeInBytes) {
-                        case 1: return plc.ReadByte(address.FullAddress).GetResultOr();
-                        case 2: return plc.ReadInt16(address.FullAddress).GetResultOr();
-                        case 4: return plc.ReadInt32(address.FullAddress).GetResultOr();
-                        case 8: return plc.ReadInt64(address.FullAddress).GetResultOr();
-                    }
-                    break;
-            }
-        }
-
-        return null;
-    }
-    
-    public static double? ReadFloat(this JetTechContext context, DeviceAddress address, bool isSingle) {
-        if (address.IsValid && context.TryGetPLC(address.Device, out IPlcApi? plc)) {
-            switch (address.AddressPrefix) {
-                case 'M': 
-                case 'S': 
-                case 'X':
-                case 'Y': return plc.ReadBool(address.FullAddress).GetResultOr() ? 1D : 0D;
-                case 'C':
-                case 'D':
-                case 'T':
-                    return isSingle ? plc.ReadFloat(address.FullAddress).GetResultOr() : plc.ReadDouble(address.FullAddress).GetResultOr();
-            }
-        }
-
-        return null;
-    }
-    
-    public static bool TryReadInteger(this JetTechContext context, DeviceAddress address, int sizeInBytes, out long value) {
-        long? val = ReadInteger(context, address, sizeInBytes);
-        value = val ?? 0;
-        return val.HasValue;
-    }
-    
-    public static bool TryReadFloat(this JetTechContext context, DeviceAddress address, bool isSingle, out double value) {
-        double? val = ReadFloat(context, address, isSingle);
-        value = val ?? 0D;
-        return val.HasValue;
-    }
-
-    public static bool TryReadBool(this JetTechContext context, PlcBatchResults batches, DeviceAddress address, out bool value) {
-        if (batches.TryGetResultDataForDevice(address.Device, out PlcBatchResultData? data)) {
-            Dictionary<int, bool>? dictionary = null;
-            switch (address.AddressPrefix) {
-                case 'M': dictionary = data.ListForM; break;
-                case 'S': dictionary = data.ListForS; break;
-                case 'X': dictionary = data.ListForX; break;
-                case 'Y': dictionary = data.ListForY; break;
-            }
-
-            if (dictionary != null && dictionary.TryGetValue(address.AddressSlot, out value))
-                return true;
-        }
-        
-        return TryReadBool(context, address, out value);
     }
 }

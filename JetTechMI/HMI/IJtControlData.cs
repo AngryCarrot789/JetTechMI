@@ -37,7 +37,7 @@ public interface IJtControlData {
     /// </summary>
     /// <param name="batches"></param>
     /// <returns>An awaitable task for the completion of the tick</returns>
-    Task UpdateAsync(PlcBatchResults batches);
+    Task UpdateAsync(BatchResultList batches);
 
     /// <summary>
     /// Called when the registry connects this data to a control fully
@@ -52,7 +52,7 @@ public interface IJtControlData {
     /// <summary>
     /// This method is called on a background task. Add requests for data from the PLC
     /// </summary>
-    void SubmitBatchData(PlcBatchRequest data);
+    void SubmitBatchData(BatchRequestList data);
 }
 
 /// <summary>

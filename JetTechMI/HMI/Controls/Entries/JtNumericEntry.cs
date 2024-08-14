@@ -28,7 +28,7 @@ namespace JetTechMI.HMI.Controls.Entries;
 public class JtNumericEntry : NumericEntry {
     public static readonly StyledProperty<string?> WriteVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("WriteVariable");
     public static readonly StyledProperty<string?> ReadVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("ReadVariable");
-    public static readonly StyledProperty<NumericDataType> DataTypeProperty = AvaloniaProperty.Register<JtNumericEntry, NumericDataType>("DataType");
+    public static readonly StyledProperty<DataType> DataTypeProperty = AvaloniaProperty.Register<JtNumericEntry, DataType>("DataType");
 
     public string? WriteVariable {
         get => this.GetValue(WriteVariableProperty);
@@ -40,7 +40,7 @@ public class JtNumericEntry : NumericEntry {
         set => this.SetValue(ReadVariableProperty, value);
     }
     
-    public NumericDataType DateType {
+    public DataType DataType {
         get => this.GetValue(DataTypeProperty);
         set => this.SetValue(DataTypeProperty, value);
     }
@@ -54,6 +54,10 @@ public class JtNumericEntry : NumericEntry {
         ReadVariableProperty.Changed.AddClassHandler<JtNumericEntry, string?>((c, e) => {
             JetTechRegistry.GetOrCreateControlData<JtNumericEntryControlData>(c).ReadVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
+
+        DataTypeProperty.Changed.AddClassHandler<JtNumericEntry, DataType>((c, e) => {
+            JetTechRegistry.GetOrCreateControlData<JtNumericEntryControlData>(c).DataType = e.NewValue.GetValueOrDefault();
+        });
     }
 
     protected override void OnChangeValueFromNumberPad(double newValue) {
@@ -64,33 +68,38 @@ public class JtNumericEntry : NumericEntry {
     }
 
     private class JtNumericEntryControlData : BaseControlData<JtNumericEntry> {
-        public DeviceAddress WriteVariable { get; set; }
-        public DeviceAddress ReadVariable { get; set; }
-        public DeviceAddress EnablingVariable { get; set; }
+        public DeviceAddress? WriteVariable { get; set; }
+        public DeviceAddress? ReadVariable { get; set; }
+        public DeviceAddress? EnablingVariable { get; set; }
+        public DataType DataType { get; set; }
 
         public JtNumericEntryControlData(JtNumericEntry control) : base(control) {
         }
 
-        public override void SubmitBatchData(PlcBatchRequest data) {
+        public override void SubmitBatchData(BatchRequestList data) {
             base.SubmitBatchData(data);
-            data.TryRequest(this.EnablingVariable);
-            data.TryRequest(this.ReadVariable);
+            data.TryRequest(this.EnablingVariable, DataSize.Bit);
+            data.TryRequest(this.ReadVariable, this.DataType.GetDataSize());
         }
 
-        public override async Task UpdateAsync(PlcBatchResults batches) {
-            double? val;
-            switch (this.Control.DateType) {
-                case NumericDataType.Float:  val = this.Context.ReadFloat(this.ReadVariable, false); break;
-                case NumericDataType.Double: val = this.Context.ReadFloat(this.ReadVariable, true); break;
-                case NumericDataType.Byte:   val = this.Context.ReadInteger(this.ReadVariable, 1); break;
-                case NumericDataType.Word:   val = this.Context.ReadInteger(this.ReadVariable, 2); break;
-                case NumericDataType.DWord:  val = this.Context.ReadInteger(this.ReadVariable, 4); break;
+        public override async Task UpdateAsync(BatchResultList batches) {
+            if (this.ReadVariable == null) {
+                return;
+            }
+            
+            double val;
+            switch (this.Control.DataType) {
+                case DataType.Bool: {val = this.TryReadBool(batches, this.ReadVariable, out bool value) && value ? 1.0 : 0.0; break; }
+                case DataType.Byte: {val = this.TryReadByte(batches, this.ReadVariable, out byte value) ? value : 0.0; break; }
+                case DataType.Short: {val = this.TryReadInt16(batches, this.ReadVariable, out short value) ? value : 0.0; break; }
+                case DataType.Int: {val = this.TryReadInt32(batches, this.ReadVariable, out int value) ? value : 0.0; break; }
+                case DataType.Long: {val = this.TryReadInt64(batches, this.ReadVariable, out long value) ? value : 0.0; break; }
+                case DataType.Float: {val = this.TryReadFloat(batches, this.ReadVariable, out float value) ? value : 0.0; break; }
+                case DataType.Double: {val = this.TryReadDouble(batches, this.ReadVariable, out double value) ? value : 0.0; break; }
                 default: throw new ArgumentOutOfRangeException();
             }
-
-            if (val.HasValue) {
-                this.Control.Value = val.Value;
-            }
+            
+            this.Control.Value = val;
         }
 
         public override void OnConnect() {
@@ -100,13 +109,15 @@ public class JtNumericEntry : NumericEntry {
         }
 
         public void SendNewValue(double value) {
-            if (this.WriteVariable.IsValid && this.Context.TryGetPLC(this.WriteVariable, out IPlcApi? plc)) {
-                switch (this.Control.DateType) {
-                    case NumericDataType.Float:  plc.WriteFloat(this.WriteVariable.FullAddress, (float) value); break;
-                    case NumericDataType.Double: plc.WriteDouble(this.WriteVariable.FullAddress, value); break;
-                    case NumericDataType.Byte:   plc.WriteByte(this.WriteVariable.FullAddress, (byte) value); break;
-                    case NumericDataType.Word:   plc.WriteInt16(this.WriteVariable.FullAddress, (short) value); break;
-                    case NumericDataType.DWord:  plc.WriteInt32(this.WriteVariable.FullAddress, (int) value); break;
+            if (this.WriteVariable != null && this.Context.TryGetPLC(this.WriteVariable, out ILogicController? plc)) {
+                switch (this.Control.DataType) {
+                    case DataType.Bool:   plc.WriteBool(this.WriteVariable.Address, Maths.Equals(value, 1.0)); break;
+                    case DataType.Byte:   plc.WriteByte(this.WriteVariable.Address, (byte) value); break;
+                    case DataType.Short:  plc.WriteInt16(this.WriteVariable.Address, (short) value); break;
+                    case DataType.Int:    plc.WriteInt32(this.WriteVariable.Address, (int) value); break;
+                    case DataType.Long:   plc.WriteInt64(this.WriteVariable.Address, (long) value); break;
+                    case DataType.Float:  plc.WriteFloat(this.WriteVariable.Address, (float) value); break;
+                    case DataType.Double: plc.WriteDouble(this.WriteVariable.Address, value); break;
                     default: throw new ArgumentOutOfRangeException();
                 }
             }

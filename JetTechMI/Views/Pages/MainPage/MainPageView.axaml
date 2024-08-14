@@ -37,7 +37,7 @@
                 <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
-                <entries:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" ReadVariable="D0" WriteVariable="D0" DateType="Word" Minimum="0" Maximum="6000" Value="0" Width="240"/>
+                <entries:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" ReadVariable="D0" WriteVariable="D0" DataType="Short" Minimum="0" Maximum="6000" Value="0" Width="240"/>
                 <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
                 <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>
                 <b:JtButton WriteVariable="M8" ReadVariable="M6" Content="LED 8" Padding="16,10"/>

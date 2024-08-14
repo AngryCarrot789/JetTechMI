@@ -20,6 +20,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using HslCommunication.Core.Types;
 
 namespace JetTechMI.HMI;
 
@@ -37,13 +38,74 @@ public abstract class BaseControlData<T> : IJtControlData<T> where T : Control {
         this.Control = control ?? throw new ArgumentNullException(nameof(control), "Control cannot be null");
     }
 
-    public abstract Task UpdateAsync(PlcBatchResults batches);
-    
+    public abstract Task UpdateAsync(BatchResultList batches);
+
     public abstract void OnConnect();
 
     public abstract void OnDisconnect();
+
+    public virtual void SubmitBatchData(BatchRequestList data) {
+    }
     
-    public virtual void SubmitBatchData(PlcBatchRequest data) {
-        
+    public bool TryReadBool(BatchResultList batches, DeviceAddress? address, out bool value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadBool(address).TryGetValue(out value);
+        }
+
+        return value = false;
+    }
+
+    public bool TryReadByte(BatchResultList batches, DeviceAddress? address, out byte value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadByte(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryReadInt16(BatchResultList batches, DeviceAddress? address, out short value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadInt16(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryReadInt32(BatchResultList batches, DeviceAddress? address, out int value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadInt32(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryReadInt64(BatchResultList batches, DeviceAddress? address, out long value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadInt64(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryReadFloat(BatchResultList batches, DeviceAddress? address, out float value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadFloat(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryReadDouble(BatchResultList batches, DeviceAddress? address, out double value) {
+        if (address != null && batches.TryGetResultDataForDevice(address.Device, out BatchResultData? data)) {
+            return data.ReadDouble(address).TryGetValue(out value);
+        }
+
+        value = default;
+        return false;
     }
 }

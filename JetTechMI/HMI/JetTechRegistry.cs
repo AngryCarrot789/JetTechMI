@@ -35,14 +35,10 @@ public class JetTechRegistry {
 
     private readonly Dictionary<Type, ControlTypeRegistration> controlTypes;
     private readonly List<IJtControlData> allControls;
-    private readonly PlcBatchRequest batchesRequest;
-    private readonly PlcBatchResults batchesData;
 
     public JetTechRegistry() {
         this.controlTypes = new Dictionary<Type, ControlTypeRegistration>();
         this.allControls = new List<IJtControlData>();
-        this.batchesRequest = new PlcBatchRequest();
-        this.batchesData = new PlcBatchResults();
     }
     
     public void RegisterControlType(Type controlType, Func<Control, IJtControlData> dataConstructor) {
@@ -120,29 +116,33 @@ public class JetTechRegistry {
     }
 
     private void ProcessAndSubmitBatchRequests() {
-        this.batchesRequest.Clear();
+        BatchRequestList requestList = JetTechContext.Instance.BatchRequestList;
+        requestList.Prepare();
+        
         for (int i = 0; i < this.allControls.Count; i++) {
             IJtControlData data = this.allControls[i];
 
             try {
-                data.SubmitBatchData(this.batchesRequest);
+                data.SubmitBatchData(requestList);
             }
             catch (Exception e) {
                 Debug.WriteLine($"Exception while querying batch data from control '{data.Control}': " + e);
             }
         }
         
-        this.batchesRequest.Submit(JetTechContext.Instance, this.batchesData);
+        JetTechContext.Instance.BatchResultList.Clear();
+        requestList.Submit(JetTechContext.Instance, JetTechContext.Instance.BatchResultList);
     }
 
     private async Task UpdateAllAsync() {
+        BatchResultList batches = JetTechContext.Instance.BatchResultList;
         const int ControlsPerGroup = 4;
         for (int i = 0; i < this.allControls.Count;) {
             for (; i < Math.Min(this.allControls.Count, i + ControlsPerGroup); i++) {
                 IJtControlData data = this.allControls[i];
 
                 try {
-                    await data.UpdateAsync(this.batchesData);
+                    await data.UpdateAsync(batches);
                 }
                 catch (Exception e) {
                     Debug.WriteLine($"Exception while updating control '{data.Control}': " + e);
@@ -152,7 +152,7 @@ public class JetTechRegistry {
             await Task.Delay(2);
         }
 
-        this.batchesData.Clear();
+        batches.Clear();
     }
 
     private class ControlTypeRegistration {
