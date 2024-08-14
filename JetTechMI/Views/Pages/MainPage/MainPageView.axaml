@@ -38,19 +38,21 @@
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
                 <entries:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" ReadVariable="D0" WriteVariable="D0" DataType="Short" Minimum="0" Maximum="6000" Value="0" Width="240"/>
-                <b:JtButton WriteVariable="M6" ReadVariable="M6" Content="LED 6" Padding="16,10"/>
-                <b:JtButton WriteVariable="M7" ReadVariable="M6" Content="LED 7" Padding="16,10"/>
-                <b:JtButton WriteVariable="M8" ReadVariable="M6" Content="LED 8" Padding="16,10"/>
-                <b:JtButton WriteVariable="M9" ReadVariable="M6" Content="LED 9" Padding="16,10"/>
-                <b:JtButton WriteVariable="M10" ReadVariable="M10" Content="LED 10" Padding="16,10"/>
-                <b:JtButton WriteVariable="M11" ReadVariable="M11" Content="LED 11" Padding="16,10"/>
-                <b:JtButton WriteVariable="M12" ReadVariable="M12" Content="LED 12" Padding="16,10"/>
-                <b:JtButton WriteVariable="M13" ReadVariable="M13" Content="LED 13" Padding="16,10"/>
-                <b:JtButton WriteVariable="M14" ReadVariable="M14" Content="LED 14" Padding="16,10"/>
-                <b:JtButton WriteVariable="M15" ReadVariable="M15" Content="LED 15" Padding="16,10"/>
-                <b:JtButton WriteVariable="M16" ReadVariable="M16" Content="LED 16" Padding="16,10"/>
+                <WrapPanel Orientation="Horizontal">
+                    <b:JtButton WriteVariable="Y6" ReadVariable="Y6" Content="Y6" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y7" ReadVariable="Y7" Content="Y7" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y10" ReadVariable="Y10" Content="Y10" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y11" ReadVariable="Y11" Content="Y11" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y12" ReadVariable="Y12" Content="Y12" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y13" ReadVariable="Y13" Content="Y13" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y14" ReadVariable="Y14" Content="Y14" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y15" ReadVariable="Y15" Content="Y15" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y16" ReadVariable="Y16" Content="Y16" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y17" ReadVariable="Y17" Content="Y17" Padding="16,10"/>
+                    <b:JtButton WriteVariable="Y20" ReadVariable="Y20" Content="Y20" Padding="16,10"/>
+                </WrapPanel>
                 <!--
-<b:JtButton WriteVariable="M17" ReadVariable="M17" Content="LED 17" Padding="16,10"/>
+                <b:JtButton WriteVariable="M17" ReadVariable="M17" Content="LED 17" Padding="16,10"/>
                 <b:JtButton WriteVariable="M18" ReadVariable="M18" Content="LED 18" Padding="16,10"/>
                 <b:JtButton WriteVariable="M19" ReadVariable="M19" Content="LED 19" Padding="16,10"/>
                 <b:JtButton WriteVariable="M20" ReadVariable="M20" Content="LED 20" Padding="16,10"/>

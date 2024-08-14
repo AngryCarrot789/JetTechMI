@@ -3,6 +3,9 @@ A library for designing the interface for Human Machine Interface displays.
 
 This library is incredibly WIP at the moment. If you have any feedback or criticism for the app, that would be appreciate! Also feel free to contribute, if you would like to. You can see the TODO list near the bottom
 
+![](JetTechMI_2024-08-14_22.15.21.png)
+*Motor ON button changes its text based on the visible pressed state, using Avalonia styles only. Other buttons are visibly pressed only by the ReadVariable property. The numeric entry with the PWM Freq text has a ReadVariable for a short number*
+
 # Building
 
 Clone the project using the command
@@ -41,6 +44,24 @@ Then add this line:
 /home/<username>/BlueberryBenchSupply/BlueberryBenchSupply --drm
 
 ```
+
+## Principles
+The idea was that for each control there would be an instance of `IJtControlData` which would be used
+to implement the updating and batched data requests of a specific control. The `JtButton` class is one example.
+You shouldn't necessarily need to access code behind; you'd just need to have code somewhere to connect to your PLC
+and register it with the `JetTechContext` global instance.
+
+Controls are added to and removed from the `JtControlManager` global instance, which is what deals with the update loop
+and also deals with the batched update system.
+
+When using a page system, it's important to unregister controls that are no longer visible. 
+I will try and work on an automatic system for this
+
+## Designing a UI
+For buttons, use `JtButton`. It has a `ReadVariable` (which determines the visible pressed state), a `WriteVariable` (which is used 
+to write the physical pressed state) and the `EnablingVariable` which is what either enabled or disabled the button (none present means always enabled).
+There's also the ButtonMode which is what lets the button behave as a Set, Reset, Toggle or Push button (rather than having separate controls for each)
+
 
 ## Contributing
 Feel free to contribute whatever you want if you think it'll make the editor better!

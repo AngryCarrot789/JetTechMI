@@ -94,17 +94,17 @@ public class JtButton : ContentControl {
     }
 
     static JtButton() {
-        JetTechRegistry.Instance.RegisterControlType(typeof(JtButton), (c) => new JtButtonControlData((JtButton) c));
+        JtControlManager.Instance.RegisterControlType(typeof(JtButton), (c) => new JtButtonControlData((JtButton) c));
         WriteVariableProperty.Changed.AddClassHandler<JtButton, string?>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtButtonControlData>(c).WriteVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
+            JtControlManager.GetOrCreateControlData<JtButtonControlData>(c).WriteVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
 
         ReadVariableProperty.Changed.AddClassHandler<JtButton, string?>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtButtonControlData>(c).ReadVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
+            JtControlManager.GetOrCreateControlData<JtButtonControlData>(c).ReadVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
 
         EnablingVariableProperty.Changed.AddClassHandler<JtButton, string?>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtButtonControlData>(c).EnablingVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
+            JtControlManager.GetOrCreateControlData<JtButtonControlData>(c).EnablingVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
     }
 
@@ -224,14 +224,14 @@ public class JtButton : ContentControl {
 
         public override async Task UpdateAsync(BatchResultList batches) {
             // A cool light show that shows how the updating happens in real time
-            if (this.oldBrush == null) {
-                this.oldBrush = this.Control.Background;
-                this.Control.Background = Brushes.Orange;
-            }
-            else {
-                this.Control.Background = this.oldBrush;
-                this.oldBrush = null;
-            }
+            // if (this.oldBrush == null) {
+            //     this.oldBrush = this.Control.Background;
+            //     this.Control.Background = Brushes.Orange;
+            // }
+            // else {
+            //     this.Control.Background = this.oldBrush;
+            //     this.oldBrush = null;
+            // }
 
             if (this.EnablingVariable == null)
                 this.Control.IsEnabled = true;

@@ -24,7 +24,7 @@ namespace JetTechMI.HMI;
 
 /// <summary>
 /// Defines an interface for the control data, that is, custom data and functionality attached
-/// to a single instance of a UI control registered with the <see cref="JetTechRegistry"/>
+/// to a single instance of a UI control registered with the <see cref="JtControlManager"/>
 /// </summary>
 public interface IJtControlData {
     /// <summary>

@@ -28,17 +28,22 @@ using JetTechMI.HMI.Attached;
 namespace JetTechMI.HMI;
 
 /// <summary>
-/// A class which contains a registry of every type of HMI element and how to handle interactions of data
+/// A class which contains a registry of registered control types, and a list of active HMI control element
 /// </summary>
-public class JetTechRegistry {
-    public static JetTechRegistry Instance { get; } = new JetTechRegistry();
+public class JtControlManager {
+    public static JtControlManager Instance { get; } = new JtControlManager();
 
     private readonly Dictionary<Type, ControlTypeRegistration> controlTypes;
-    private readonly List<IJtControlData> allControls;
+    private readonly List<IJtControlData> activeControls;
 
-    public JetTechRegistry() {
+    /// <summary>
+    /// Gets an enumerable of the controls that are currently active in this application
+    /// </summary>
+    public IEnumerable<IJtControlData> ActiveControls => this.activeControls;
+    
+    public JtControlManager() {
         this.controlTypes = new Dictionary<Type, ControlTypeRegistration>();
-        this.allControls = new List<IJtControlData>();
+        this.activeControls = new List<IJtControlData>();
     }
     
     public void RegisterControlType(Type controlType, Func<Control, IJtControlData> dataConstructor) {
@@ -102,7 +107,7 @@ public class JetTechRegistry {
             throw new InvalidOperationException("No registered control information for " + control.GetType());
         
         JtCommon.SetRegisteredControlData(control, data = registration.CreateData(control));
-        this.allControls.Add(data);
+        this.activeControls.Add(data);
         data.OnConnect();
         return data;
     }
@@ -110,7 +115,7 @@ public class JetTechRegistry {
     public void Unregister(Control control) {
         if (JtCommon.TryGetRegisteredControlData(control, out IJtControlData data)) {
             data.OnDisconnect();
-            this.allControls.Remove(data);
+            this.activeControls.Remove(data);
             JtCommon.SetRegisteredControlData(control, null);
         }
     }
@@ -119,8 +124,8 @@ public class JetTechRegistry {
         BatchRequestList requestList = JetTechContext.Instance.BatchRequestList;
         requestList.Prepare();
         
-        for (int i = 0; i < this.allControls.Count; i++) {
-            IJtControlData data = this.allControls[i];
+        for (int i = 0; i < this.activeControls.Count; i++) {
+            IJtControlData data = this.activeControls[i];
 
             try {
                 data.SubmitBatchData(requestList);
@@ -137,9 +142,9 @@ public class JetTechRegistry {
     private async Task UpdateAllAsync() {
         BatchResultList batches = JetTechContext.Instance.BatchResultList;
         const int ControlsPerGroup = 4;
-        for (int i = 0; i < this.allControls.Count;) {
-            for (; i < Math.Min(this.allControls.Count, i + ControlsPerGroup); i++) {
-                IJtControlData data = this.allControls[i];
+        for (int i = 0; i < this.activeControls.Count;) {
+            for (; i < Math.Min(this.activeControls.Count, i + ControlsPerGroup); i++) {
+                IJtControlData data = this.activeControls[i];
 
                 try {
                     await data.UpdateAsync(batches);

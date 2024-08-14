@@ -47,7 +47,7 @@ public partial class App : Application {
     }
 
     public override void OnFrameworkInitializationCompleted() {
-        JetTechRegistry.Instance.Run();
+        JtControlManager.Instance.Run();
 
         IMainView? view = null;
         

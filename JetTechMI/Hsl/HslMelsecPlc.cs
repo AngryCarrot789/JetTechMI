@@ -70,7 +70,7 @@ public class HslMelsecPlc : BaseLogicController {
         }
 
         public override void Request(string address, DataSize dataSize) {
-            LightOperationResult result = McAddressData.ExtractInfo(address, out MelsecMcDataType type, out int addrStart);
+            LightOperationResult result = McAddressData.ExtractInfo(address, out MelsecMcDataType type, out int addressStart);
             if (!result.IsSuccess)
                 return;
             
@@ -78,7 +78,7 @@ public class HslMelsecPlc : BaseLogicController {
             if (!dictionary.TryGetValue(type, out IntegerRangeList? list))
                 dictionary[type] = list = new IntegerRangeList();
 
-            list.Add(addrStart);
+            list.Add(addressStart);
         }
     }
     

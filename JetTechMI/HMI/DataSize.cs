@@ -13,15 +13,15 @@ public enum DataSize {
     /// </summary>
     Byte,
     /// <summary>
-    /// Two bytes
+    /// Two bytes - Primarily for short/ushort
     /// </summary>
     Word,
     /// <summary>
-    /// Four bytes
+    /// Four bytes - Primarily for int, uint and float
     /// </summary>
     DWord,
     /// <summary>
-    /// Eight bytes
+    /// Eight bytes. Primarily for long, ulong and double
     /// </summary>
     QWord
 }

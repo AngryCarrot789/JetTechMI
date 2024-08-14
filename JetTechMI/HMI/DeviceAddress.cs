@@ -52,7 +52,6 @@ public class DeviceAddress : IEquatable<DeviceAddress> {
         this.Address = address;
     }
 
-    // 0.Y5
     public static DeviceAddress Parse(string? value) {
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("Value cannot be null, empty or consist of only whitespaces");
@@ -78,6 +77,10 @@ public class DeviceAddress : IEquatable<DeviceAddress> {
     public override bool Equals(object? obj) => obj is DeviceAddress address && this.Equals(address);
 
     public override int GetHashCode() => HashCode.Combine(this.Device, this.Address);
+
+    public override string ToString() {
+        return this.Device == 0 ? this.Address : $"#{this.Device}.{this.Address}";
+    }
 
     public static bool TryGetPlcData<T>(DeviceAddress address, [NotNullWhen(true)] out T? data) where T : class => (data = address.plcData as T) != null;
 

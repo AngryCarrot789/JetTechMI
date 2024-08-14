@@ -41,6 +41,12 @@ public class BatchRequestList {
 
     public void Submit(JetTechContext context, BatchResultList batchesData) => context.SubmitBatchRequestData(this, batchesData);
 
+    /// <summary>
+    /// Tries to find the associated batch request info for the address' device and then
+    /// requests the address for that PLC device via <see cref="BatchRequestInfo.Request"/>
+    /// </summary>
+    /// <param name="address">The address of the data</param>
+    /// <param name="dataSize">The size of the data</param>
     public void TryRequest(DeviceAddress? address, DataSize dataSize) {
         if (address != null && this.Requests.TryGet(address.Device, out BatchRequestInfo? data)) {
             data.Request(address.Address, dataSize);
@@ -60,5 +66,11 @@ public abstract class BatchRequestInfo {
 
     public abstract void Clear();
     
+    /// <summary>
+    /// Tries to add the address as a requested piece of data with the given data size. Care must be taken to
+    /// ensure the data size matches the underlying data on the PLC, otherwise you may get back invalid data
+    /// </summary>
+    /// <param name="address">The address of the data</param>
+    /// <param name="dataSize">The size of the data</param>
     public abstract void Request(string address, DataSize dataSize);
 }

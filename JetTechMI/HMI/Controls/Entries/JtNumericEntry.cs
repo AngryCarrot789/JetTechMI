@@ -46,17 +46,17 @@ public class JtNumericEntry : NumericEntry {
     }
 
     static JtNumericEntry() {
-        JetTechRegistry.Instance.RegisterControlType(typeof(JtNumericEntry), (c) => new JtNumericEntryControlData((JtNumericEntry) c));
+        JtControlManager.Instance.RegisterControlType(typeof(JtNumericEntry), (c) => new JtNumericEntryControlData((JtNumericEntry) c));
         WriteVariableProperty.Changed.AddClassHandler<JtNumericEntry, string?>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtNumericEntryControlData>(c).WriteVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
+            JtControlManager.GetOrCreateControlData<JtNumericEntryControlData>(c).WriteVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
 
         ReadVariableProperty.Changed.AddClassHandler<JtNumericEntry, string?>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtNumericEntryControlData>(c).ReadVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
+            JtControlManager.GetOrCreateControlData<JtNumericEntryControlData>(c).ReadVariable = DeviceAddress.Parse(e.NewValue.GetValueOrDefault());
         });
 
         DataTypeProperty.Changed.AddClassHandler<JtNumericEntry, DataType>((c, e) => {
-            JetTechRegistry.GetOrCreateControlData<JtNumericEntryControlData>(c).DataType = e.NewValue.GetValueOrDefault();
+            JtControlManager.GetOrCreateControlData<JtNumericEntryControlData>(c).DataType = e.NewValue.GetValueOrDefault();
         });
     }
 
