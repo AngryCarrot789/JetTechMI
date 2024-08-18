@@ -28,6 +28,11 @@ namespace JetTechMI.HMI;
 /// </summary>
 public interface IJtControlData {
     /// <summary>
+    /// Gets whether this data is connected to the manager or not
+    /// </summary>
+    bool IsConnected { get; }
+
+    /// <summary>
     /// Gets the control associated with this data
     /// </summary>
     Control Control { get; }
@@ -35,19 +40,19 @@ public interface IJtControlData {
     /// <summary>
     /// Scheduled update on the application's main thread
     /// </summary>
-    /// <param name="batches"></param>
+    /// <param name="batches">The batched data responses</param>
     /// <returns>An awaitable task for the completion of the tick</returns>
     Task UpdateAsync(BatchResultList batches);
 
     /// <summary>
-    /// Called when the registry connects this data to a control fully
+    /// Called when the control manager is associated with this control data
     /// </summary>
-    void OnConnect();
+    void OnConnectToManager();
     
     /// <summary>
-    /// Called just before the registry completely de-associates this data with the control
+    /// Called when this data is about to become unassociated with the control manager
     /// </summary>
-    void OnDisconnect();
+    void OnDisconnectFromManager();
 
     /// <summary>
     /// This method is called on a background task. Add requests for data from the PLC

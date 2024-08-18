@@ -24,6 +24,9 @@ using System.Diagnostics;
 
 namespace JetTechMI.Utils;
 
+/// <summary>
+/// This class efficiently stores a set of integers. It is pretty much an integer hash set
+/// </summary>
 public class IntegerRangeList {
     private readonly List<IntRange> list;
 

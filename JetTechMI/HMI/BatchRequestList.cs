@@ -17,6 +17,7 @@
 // along with JetTechMI. If not, see <https://www.gnu.org/licenses/>.
 // 
 
+using HslCommunication.Core.Types;
 using JetTechMI.Utils;
 
 namespace JetTechMI.HMI;
@@ -55,22 +56,32 @@ public class BatchRequestList {
 }
 
 /// <summary>
-/// A struct which contains batch request information in relation to a specific PLC device
+/// A class which stores all of the variable requests in relation to a specific PLC device
 /// </summary>
 public abstract class BatchRequestInfo {
-    public readonly int Device;
+    /// <summary>
+    /// The device ID associated with this request info
+    /// </summary>
+    public int Device { get; }
 
-    public BatchRequestInfo(int device) {
+    protected BatchRequestInfo(int device) {
         this.Device = device;
     }
 
-    public abstract void Clear();
-    
     /// <summary>
-    /// Tries to add the address as a requested piece of data with the given data size. Care must be taken to
-    /// ensure the data size matches the underlying data on the PLC, otherwise you may get back invalid data
+    /// Clears all of the requests. This is called automatically before the batch tick
+    /// </summary>
+    public abstract void Clear();
+
+    /// <summary>
+    /// Adds the address to the request list with the given data size. Care must be taken to ensure the data size
+    /// matches the underlying data on the PLC, otherwise you may get back invalid data. For example, if you request
+    /// "M0", make sure the data size is <see cref="DataSize.Bit"/> (which is the case for most PLCs). Or if you
+    /// request "D2", make sure the data size is <see cref="DataSize.Word"/> (since in most PLCs, data registers are
+    /// 16 bits, although you can actually combine 2 registers into one, in that case, supply <see cref="DataSize.DWord"/>)
     /// </summary>
     /// <param name="address">The address of the data</param>
     /// <param name="dataSize">The size of the data</param>
-    public abstract void Request(string address, DataSize dataSize);
+    /// <returns>The result of the request. May contain an error such as invalid address format</returns>
+    public abstract LightOperationResult Request(string address, DataSize dataSize);
 }

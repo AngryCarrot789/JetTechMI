@@ -55,6 +55,75 @@ public class JtControlManager {
 
         this.controlTypes[controlType] = new ControlTypeRegistration(controlType, dataConstructor);
     }
+    
+    /// <summary>
+    /// Gets or creates the control data. This uses the registered control type to create an instance automatically
+    /// </summary>
+    /// <param name="control">The control</param>
+    /// <param name="autoConnectToManager">
+    /// If the control has data associated with it via the avalonia property
+    /// but is not connected, then if this is true, add it to this manager
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException">No </exception>
+    public IJtControlData GetOrCreateControlData(Control control, bool autoConnectToManager = false) {
+        if (JtCommon.TryGetRegisteredControlData(control, out IJtControlData data)) {
+            if (autoConnectToManager && !data.IsConnected)
+                this.Register(control, data, false);
+            return data;
+        }
+
+        ControlTypeRegistration? registration = null;
+        for (Type? type = control.GetType(); !ReferenceEquals(type, null); type = type.BaseType) {
+            if (this.controlTypes.TryGetValue(type, out registration)) {
+                break;
+            }
+        }
+
+        if (registration == null)
+            throw new InvalidOperationException("No registered control information for " + control.GetType());
+        
+        this.Register(control, data = registration.CreateData(control));
+        return data;
+    }
+
+    /// <summary>
+    /// Adds the control to this control manager
+    /// </summary>
+    /// <param name="control">The control. This is only used when updateAvaloniaProperty is true so it may be null</param>
+    /// <param name="data">The data being added</param>
+    /// <param name="updateAvaloniaProperty">True to associate the data with the control via the avalonia property</param>
+    /// <exception cref="InvalidOperationException">Already added</exception>
+    public void Register(Control control, IJtControlData data, bool updateAvaloniaProperty = true) {
+        if (data.IsConnected)
+            throw new InvalidOperationException("Data is already connected to the manager");
+        
+        if (updateAvaloniaProperty)
+            JtCommon.SetRegisteredControlData(control, data);
+        
+        this.activeControls.Add(data);
+        data.OnConnectToManager();
+    }
+    
+    /// <summary>
+    /// Removes the control's data, if it has any
+    /// </summary>
+    public void Unregister(Control control) {
+        if (JtCommon.TryGetRegisteredControlData(control, out IJtControlData? data)) {
+            this.Unregister(control, data);
+        }
+    }
+    
+    public void Unregister(Control control, IJtControlData controlData, bool updateAvaloniaProperty = true) {
+        if (!controlData.IsConnected)
+            throw new InvalidOperationException("Data is not connected to the manager");
+            
+        controlData.OnDisconnectFromManager();
+        this.activeControls.Remove(controlData);
+        
+        if (updateAvaloniaProperty)
+            JtCommon.SetRegisteredControlData(control, null);
+    }
 
     public void Run() {
         Task.Run(async () => {
@@ -68,11 +137,13 @@ public class JtControlManager {
                 try {
                     DateTime startTime = DateTime.Now;
                     
+                    // Process all controls for batch requests and then submit
                     this.ProcessAndSubmitBatchRequests();
-                    await Dispatcher.UIThread.InvokeAsync(this.UpdateAllAsync);
                     
-                    TimeSpan fullRefreshTime = (DateTime.Now - startTime);
+                    // Update all control states
+                    await Dispatcher.UIThread.InvokeAsync(this.UpdateAllAsync);
 
+                    TimeSpan fullRefreshTime = (DateTime.Now - startTime);
                     await Task.Delay(new TimeSpan(Math.Max(RefreshInterval.Ticks - fullRefreshTime.Ticks, MinSleepForLongRefresh.Ticks)));
                 }
                 catch (Exception e) {
@@ -88,36 +159,8 @@ public class JtControlManager {
     /// <param name="control"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static T GetOrCreateControlData<T>(Control control) where T : IJtControlData {
-        return (T) Instance.GetOrCreateControlData(control);
-    }
-
-    public IJtControlData GetOrCreateControlData(Control control) {
-        if (JtCommon.TryGetRegisteredControlData(control, out IJtControlData data))
-            return data;
-
-        ControlTypeRegistration? registration = null;
-        for (Type? type = control.GetType(); !ReferenceEquals(type, null); type = type.BaseType) {
-            if (this.controlTypes.TryGetValue(type, out registration)) {
-                break;
-            }
-        }
-
-        if (registration == null)
-            throw new InvalidOperationException("No registered control information for " + control.GetType());
-        
-        JtCommon.SetRegisteredControlData(control, data = registration.CreateData(control));
-        this.activeControls.Add(data);
-        data.OnConnect();
-        return data;
-    }
-    
-    public void Unregister(Control control) {
-        if (JtCommon.TryGetRegisteredControlData(control, out IJtControlData data)) {
-            data.OnDisconnect();
-            this.activeControls.Remove(data);
-            JtCommon.SetRegisteredControlData(control, null);
-        }
+    public static T GetOrCreateControlData<T>(Control control, bool autoConnectToManager = false) where T : IJtControlData {
+        return (T) Instance.GetOrCreateControlData(control, autoConnectToManager);
     }
 
     private void ProcessAndSubmitBatchRequests() {

@@ -37,21 +37,8 @@ public class MelsecAddressInfo {
         this.UniformAddress = dataType.AsciiCodeOrChar + startAddress.ToString();
     }
 
-    public static LightOperationResult<ushort> GetActualStartAddress(MelsecMcDataType type, ushort startAddress, DataSize requestedSize) {
-        if (requestedSize == DataSize.Bit) {
-            LightOperationResult<ushort, ushort, ushort> result = MelsecFxSerial.FxCalculateBoolStartAddress(type, startAddress);
-            if (!result.IsSuccess)
-                return new LightOperationResult<ushort>(result.ErrorCode, result.Message);
-            
-            return LightOperationResult.CreateSuccessResult((ushort) (result.Content1 + result.Content3));
-        }
-        else {
-            return MelsecFxSerial.FxCalculateWordStartAddress(type, startAddress);
-        }
-    }
-
     public static bool TryParse(DeviceAddress address, [NotNullWhen(true)] out MelsecAddressInfo? info) {
-        LightOperationResult<MelsecMcDataType, ushort> result = MelsecFxSerial.FxAnalysisAddress(address.Address);
+        LightOperationResult<MelsecMcDataType, ushort> result = MelsecFxSerial.FxParseAddress(address.Address);
         if (!result.IsSuccess) {
             info = default;
             return false;

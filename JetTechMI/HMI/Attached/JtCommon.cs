@@ -32,4 +32,8 @@ public class JtCommon {
     public static bool TryGetRegisteredControlData(Control control, [NotNullWhen(true)] out IJtControlData? data) {
         return (data = GetRegisteredControlData(control)) != null;
     }
+    
+    public static bool TryGetRegisteredControlData<T>(Control control, [NotNullWhen(true)] out T? data) where T : class, IJtControlData {
+        return (data = GetRegisteredControlData(control) as T) != null;
+    }
 }

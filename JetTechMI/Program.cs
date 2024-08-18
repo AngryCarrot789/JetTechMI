@@ -65,8 +65,33 @@ class Program {
             return builder.StartLinuxDirect(args: args, drm);
         }
 
+        // ushort nextAddress = 0;
+        // long[] array = new long[100000];
+        // int[] values = new int[100000];
+        // for (int i = 0; i < 100000; i++) {
+        //     array[i] = TestShit(nextAddress++, out int okay);
+        //     values[i] = okay;
+        // }
+        //
+        // double average = array.Average();
+        // double average2 = values.Average();
+        //
+        // Console.WriteLine(average);
+        // Console.WriteLine(average2);
+        
         return builder.StartWithClassicDesktopLifetime(args);
     }
+
+    // private static long TestShit(ushort address, out int okay) {
+    //     DateTime start = DateTime.Now;
+    //     
+    //     // 1.82-1.89 ticks
+    //     byte[] x = SoftBasic.BuildAsciiBytesFrom(address);
+    //     
+    //     long millis = (DateTime.Now - start).Ticks;
+    //     okay = x.Length;
+    //     return millis;
+    // }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()

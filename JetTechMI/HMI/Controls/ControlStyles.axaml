@@ -53,6 +53,7 @@
             </ControlTheme>
             
             <ControlTheme x:Key="{x:Type l:JtNumericEntry}" TargetType="{x:Type l:JtNumericEntry}" BasedOn="{StaticResource {x:Type c:NumericEntry}}"/>
+            <ControlTheme x:Key="{x:Type b:JtRepeatButton}" TargetType="{x:Type l:JtNumericEntry}" BasedOn="{StaticResource {x:Type RepeatButton}}"/>
             
             <ControlTemplate x:Key="RaisedBasedJtButtonTemplate" TargetType="{x:Type b:JtButton}">
                 <Grid>

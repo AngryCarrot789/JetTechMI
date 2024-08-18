@@ -56,14 +56,22 @@ public interface ILogicController : IReadableAddressMemory, IWriteableAddressMem
     /// </returns>
     LightOperationResult CheckConnection();
 
+    /// <summary>
+    /// Factory method to create an instance of the PLC-specific request storage object
+    /// </summary>
+    /// <returns>A new request info object</returns>
     BatchRequestInfo CreateRequestData();
 
+    /// <summary>
+    /// Factory method to create an instance of the PLC-specific result storage object 
+    /// </summary>
+    /// <returns>A new result data object</returns>
     BatchResultData CreateResultData();
     
     /// <summary>
     /// Reads multiple addresses from this PLC device and places the resulting data in the result data object
     /// </summary>
-    /// <param name="requests"></param>
-    /// <param name="results"></param>
+    /// <param name="requests">The request storage object</param>
+    /// <param name="results">The response/result storage object</param>
     void ReadBatchedData(BatchRequestInfo requests, BatchResultData results);
 }

@@ -56,8 +56,7 @@ public abstract class BaseLogicController : ILogicController {
     public abstract LightOperationResult<double[]> ReadDoubleArray(string address, ushort length);
     public abstract LightOperationResult<string> ReadString(string address, ushort length);
 
-    public virtual LightOperationResult WriteBool(string address, bool value) => this.WriteBoolArray(address, new bool[] { value });
-    public abstract LightOperationResult WriteBoolArray(string address, bool[] values);
+    public abstract LightOperationResult WriteBool(string address, bool value);
     public virtual LightOperationResult WriteByte(string address, byte value) => this.WriteByteArray(address, new byte[] { value });
     public abstract LightOperationResult WriteByteArray(string address, byte[] value);
     public virtual LightOperationResult WriteInt16(string address, short value) => this.WriteInt16Array(address, new short[] { value });

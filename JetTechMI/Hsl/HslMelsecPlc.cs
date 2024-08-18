@@ -19,19 +19,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using HslCommunication.Core.Address;
 using HslCommunication.Core.Types;
 using HslCommunication.Devices.Melsec;
 using JetTechMI.HMI;
 using JetTechMI.Utils;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace JetTechMI.Hsl;
 
 public class HslMelsecPlc : BaseLogicController {
-    public override bool IsConnected => this.plc.IsOpen();
+    public override bool IsConnected => this.plc.IsOpen;
     public override bool IsDoubleSupported => true;
     public override bool IsInt64Supported => true;
 
@@ -59,6 +56,8 @@ public class HslMelsecPlc : BaseLogicController {
     public override BatchResultData CreateResultData() => new MelsecBatchResultData(this.Id);
 
     private class MelsecBatchRequestInfo : BatchRequestInfo {
+        // An array of dictionaries, indexed by DataSize
+        // Dictionary maps a data type to a set of requested addresses
         public Dictionary<MelsecMcDataType, IntegerRangeList>?[] AllRequests;
         
         public MelsecBatchRequestInfo(int device) : base(device) {
@@ -69,31 +68,28 @@ public class HslMelsecPlc : BaseLogicController {
             
         }
 
-        public override void Request(string address, DataSize dataSize) {
+        public override LightOperationResult Request(string address, DataSize dataSize) {
             LightOperationResult result = McAddressData.ExtractInfo(address, out MelsecMcDataType type, out int addressStart);
             if (!result.IsSuccess)
-                return;
+                return result;
             
             Dictionary<MelsecMcDataType, IntegerRangeList> dictionary = this.AllRequests[(int) dataSize] ??= new Dictionary<MelsecMcDataType, IntegerRangeList>();
             if (!dictionary.TryGetValue(type, out IntegerRangeList? list))
                 dictionary[type] = list = new IntegerRangeList();
 
             list.Add(addressStart);
+            return LightOperationResult.CreateSuccessResult();
         }
     }
     
     private class MelsecBatchResultData : BatchResultData {
-        public Dictionary<string, bool>? Bits;
-        public Dictionary<string, byte>? Bytes;
-        public Dictionary<string, short>? Words;
-        public Dictionary<string, int>? DWords;
-        public Dictionary<string, long>? QWords;
+        private Dictionary<string, bool>? Bits;
+        private Dictionary<string, byte>? Bytes;
+        private Dictionary<string, short>? Words;
+        private Dictionary<string, int>? DWords;
+        private Dictionary<string, long>? QWords;
         
         public MelsecBatchResultData(ushort id) : base(id) {
-        }
-
-        public void Paste<T>(DataSize size, T[] values) {
-            
         }
 
         public override void Clear() {
@@ -104,26 +100,6 @@ public class HslMelsecPlc : BaseLogicController {
             this.QWords?.Clear();
         }
 
-        private static bool TryParseAddress(DeviceAddress address, out ushort index, DataSize dataSize) {
-            if (!DeviceAddress.TryGetPlcData(address, out MelsecAddressInfo? addressInfo)) {
-                if (!MelsecAddressInfo.TryParse(address, out addressInfo)) {
-                    index = default;
-                    return false;
-                }
-
-                DeviceAddress.SetPlcData(address, addressInfo);
-            }
-
-            LightOperationResult<ushort> info = MelsecAddressInfo.GetActualStartAddress(addressInfo.dataType, addressInfo.startAddress, dataSize);
-            if (!info.IsSuccess) {
-                index = 0;
-                return false;
-            }
-
-            index = info.Content;
-            return true;
-        }
-        
         private static LightOperationResult<T> Read<T>(DeviceAddress address, Dictionary<string, T>? dictionary, DataSize dataSize) {
             if (dictionary == null) {
                 return new LightOperationResult<T>();
@@ -156,8 +132,9 @@ public class HslMelsecPlc : BaseLogicController {
 
         public override LightOperationResult<double> ReadDouble(DeviceAddress address) => Read(address, this.QWords, DataSize.QWord).Select(Int64ToDouble);
 
-        private static unsafe float Int32ToFloat(int value) => *(float*) &value;
-        private static unsafe double Int64ToDouble(long value) => *(double*) &value;
+        private static float Int32ToFloat(int value) => BitConverter.Int32BitsToSingle(value);
+        
+        private static double Int64ToDouble(long value) => BitConverter.Int64BitsToDouble(value);
 
         private static void DoAppend<T>(MelsecMcDataType dataType, ushort startAddress, OperateResult<T[]> responseData, ref Dictionary<string, T>? dictionary) {
             if (!responseData.IsSuccess)
@@ -206,9 +183,6 @@ public class HslMelsecPlc : BaseLogicController {
         }
     }
     
-    private double[] avgs;
-    private int nextAvgIndx;
-    
     public override void ReadBatchedData(BatchRequestInfo requests, BatchResultData results) {
         MelsecBatchRequestInfo requestInfo = (MelsecBatchRequestInfo) requests;
         MelsecBatchResultData resultData = (MelsecBatchResultData) results;
@@ -248,14 +222,6 @@ public class HslMelsecPlc : BaseLogicController {
                 }   
             }
         }
-
-        // Test to see what was causing performance issues
-        // double millis = (DateTime.Now - start).TotalMilliseconds;
-        // double[] array = this.avgs ??= new double[10];
-        // if (this.nextAvgIndx == 10)
-        //     this.nextAvgIndx = 0;
-        // array[this.nextAvgIndx++] = millis;
-        // double totalTime = array.Average();
     }
 
     public override LightOperationResult<bool>     ReadBool(       string address               ) => WrapOperation(this.plc.ReadBool(address));
@@ -274,7 +240,6 @@ public class HslMelsecPlc : BaseLogicController {
     public override LightOperationResult<string>   ReadString(     string address, ushort length) => WrapOperation(this.plc.ReadString(address, length));
     
     public override LightOperationResult WriteBool       (string address, bool value)      => WrapOperation(this.plc.Write(address, value));
-    public override LightOperationResult WriteBoolArray(string address, bool[] values) => WrapOperation(this.plc.Write(address, values));
     public override LightOperationResult WriteByteArray  (string address, byte[] value)    => WrapOperation(this.plc.Write(address, value));
     public override LightOperationResult WriteInt16      (string address, short value)     => WrapOperation(this.plc.Write(address, value));
     public override LightOperationResult WriteInt16Array (string address, short[] values)  => WrapOperation(this.plc.Write(address, values));

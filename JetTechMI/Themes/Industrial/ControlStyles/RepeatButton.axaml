@@ -23,7 +23,7 @@
                      to give the illusion of pushing it into the screen.
                      Because PART_BorderTL and PART_BorderBR are placed after the content presenter,
                      the 2 pixel gap of the content presenter is never seen when the button is pressed -->
-                <Setter Property="Margin" Value="10,10,6,6"/>
+                <Setter Property="Margin" Value="8,8,4,4"/>
             </Style>
             <Style Selector="^ /template/ Border#PART_BorderTL">
                 <Setter Property="BorderBrush" Value="Black"/>

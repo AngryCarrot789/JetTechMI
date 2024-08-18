@@ -26,7 +26,6 @@ namespace JetTechMI.HMI;
 /// </summary>
 public interface IWriteableAddressMemory {
     LightOperationResult WriteBool(string address, bool value);
-    LightOperationResult WriteBoolArray(string address, bool[] values);
     LightOperationResult WriteByte(string address, byte value);
     LightOperationResult WriteByteArray(string address, byte[] values);
     LightOperationResult WriteInt16(string address, short value);

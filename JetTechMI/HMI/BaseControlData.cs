@@ -20,11 +20,12 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using HslCommunication.Core.Types;
 
 namespace JetTechMI.HMI;
 
 public abstract class BaseControlData<T> : IJtControlData<T> where T : Control {
+    public bool IsConnected { get; private set; }
+    
     Control IJtControlData.Control => this.Control;
 
     public T Control { get; }
@@ -40,9 +41,23 @@ public abstract class BaseControlData<T> : IJtControlData<T> where T : Control {
 
     public abstract Task UpdateAsync(BatchResultList batches);
 
-    public abstract void OnConnect();
+    public void OnConnectToManager() {
+        if (this.IsConnected)
+            throw new InvalidOperationException("Already connected");
+        this.IsConnected = true;
+        this.OnConnectedCore();
+    }
 
-    public abstract void OnDisconnect();
+    public void OnDisconnectFromManager() {
+        if (!this.IsConnected)
+            throw new InvalidOperationException("Not connected");
+        this.OnDisconnectedCore();
+        this.IsConnected = false;
+    }
+
+    protected abstract void OnConnectedCore();
+    
+    protected abstract void OnDisconnectedCore();
 
     public virtual void SubmitBatchData(BatchRequestList data) {
     }

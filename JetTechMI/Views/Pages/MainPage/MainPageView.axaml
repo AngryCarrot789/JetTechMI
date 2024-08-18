@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:b="clr-namespace:JetTechMI.HMI.Controls.Buttons"
-             xmlns:entries="clr-namespace:JetTechMI.HMI.Controls.Entries"
+             xmlns:e="clr-namespace:JetTechMI.HMI.Controls.Entries"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JetTechMI.Views.Pages.MainPage.MainPageView">
     <DockPanel>
@@ -32,12 +32,15 @@
                     </b:JtButton.Theme>
                 </b:JtButton>
                 <b:JtButton WriteVariable="M1" ReadVariable="Y01" Content="LED 2" Padding="16,10"/>
-                <b:JtButton WriteVariable="M2" ReadVariable="Y02" Content="LED 3" Padding="16,10"/>
+                <b:JtRepeatButton Variable="D0" DataType="Short" RepeatType="Increment" Content="D0 Incr" Padding="16,10"/>
+                <b:JtRepeatButton Variable="D0" DataType="Short" RepeatType="Decrement" Content="D0 Decr" Padding="16,10"/>
                 <b:JtButton WriteVariable="M3" ReadVariable="Y03" Content="LED 4" Padding="16,10"/>
                 <b:JtButton WriteVariable="M4" ReadVariable="Y04" Content="LED 5" Padding="16,10"/>
                 <b:JtButton WriteVariable="M5" ReadVariable="M5"  Content="Blinking LED" ButtonMode="Toggle" Padding="16,10"/>
                 <b:JtButton ReadVariable="Y5" Content="Y5 State" IsPhysicalPressingEnabled="False" Padding="16,10"/>
-                <entries:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" ReadVariable="D0" WriteVariable="D0" DataType="Short" Minimum="0" Maximum="6000" Value="0" Width="240"/>
+                <e:JtNumericEntry DisplayText="PWM Freq" ValueFormat="{}{0:F0} Hz" 
+                                  ReadVariable="D0" WriteVariable="D0" DataType="Short" 
+                                  Minimum="-9999999" Maximum="9999999" IsUnsigned="True" Value="0" Width="240"/>
                 <WrapPanel Orientation="Horizontal">
                     <b:JtButton WriteVariable="Y6" ReadVariable="Y6" Content="Y6" Padding="16,10"/>
                     <b:JtButton WriteVariable="Y7" ReadVariable="Y7" Content="Y7" Padding="16,10"/>

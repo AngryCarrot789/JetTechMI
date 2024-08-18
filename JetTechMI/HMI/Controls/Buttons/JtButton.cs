@@ -216,6 +216,12 @@ public class JtButton : ContentControl {
         public JtButtonControlData(JtButton control) : base(control) {
         }
 
+        protected override void OnConnectedCore() {
+        }
+
+        protected override void OnDisconnectedCore() {
+        }
+
         public override void SubmitBatchData(BatchRequestList data) {
             base.SubmitBatchData(data);
             data.TryRequest(this.EnablingVariable, DataSize.Bit);
@@ -246,13 +252,6 @@ public class JtButton : ContentControl {
                     this.Control.isToggleActive = isPressed;
                 }
             }
-        }
-
-        public override void OnConnect() {
-            // HslCommunication.Authorization.SetAuthorizationCode()
-        }
-
-        public override void OnDisconnect() {
         }
 
         public void SendActivate() => this.SendSignal(true);

@@ -29,6 +29,7 @@ public class JtNumericEntry : NumericEntry {
     public static readonly StyledProperty<string?> WriteVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("WriteVariable");
     public static readonly StyledProperty<string?> ReadVariableProperty = AvaloniaProperty.Register<JtNumericEntry, string?>("ReadVariable");
     public static readonly StyledProperty<DataType> DataTypeProperty = AvaloniaProperty.Register<JtNumericEntry, DataType>("DataType");
+    public static readonly StyledProperty<bool> IsUnsignedProperty = AvaloniaProperty.Register<JtNumericEntry, bool>("IsUnsigned");
 
     public string? WriteVariable {
         get => this.GetValue(WriteVariableProperty);
@@ -45,6 +46,14 @@ public class JtNumericEntry : NumericEntry {
         set => this.SetValue(DataTypeProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets if this numeric entry should interpret the PLC value as unsigned or signed. Default is false (signed)
+    /// </summary>
+    public bool IsUnsigned {
+        get => this.GetValue(IsUnsignedProperty);
+        set => this.SetValue(IsUnsignedProperty, value);
+    }
+    
     static JtNumericEntry() {
         JtControlManager.Instance.RegisterControlType(typeof(JtNumericEntry), (c) => new JtNumericEntryControlData((JtNumericEntry) c));
         WriteVariableProperty.Changed.AddClassHandler<JtNumericEntry, string?>((c, e) => {
@@ -76,6 +85,12 @@ public class JtNumericEntry : NumericEntry {
         public JtNumericEntryControlData(JtNumericEntry control) : base(control) {
         }
 
+        protected override void OnConnectedCore() {
+        }
+
+        protected override void OnDisconnectedCore() {
+        }
+
         public override void SubmitBatchData(BatchRequestList data) {
             base.SubmitBatchData(data);
             data.TryRequest(this.EnablingVariable, DataSize.Bit);
@@ -90,22 +105,16 @@ public class JtNumericEntry : NumericEntry {
             double val;
             switch (this.Control.DataType) {
                 case DataType.Bool: {val = this.TryReadBool(batches, this.ReadVariable, out bool value) && value ? 1.0 : 0.0; break; }
-                case DataType.Byte: {val = this.TryReadByte(batches, this.ReadVariable, out byte value) ? value : 0.0; break; }
-                case DataType.Short: {val = this.TryReadInt16(batches, this.ReadVariable, out short value) ? value : 0.0; break; }
-                case DataType.Int: {val = this.TryReadInt32(batches, this.ReadVariable, out int value) ? value : 0.0; break; }
-                case DataType.Long: {val = this.TryReadInt64(batches, this.ReadVariable, out long value) ? value : 0.0; break; }
+                case DataType.Byte: {val = this.TryReadByte(batches, this.ReadVariable, out byte value) ? (this.Control.IsUnsigned ? (sbyte) value : value) : 0.0; break; }
+                case DataType.Short: {val = this.TryReadInt16(batches, this.ReadVariable, out short value) ? (this.Control.IsUnsigned ? (ushort) value : value) : 0.0; break; }
+                case DataType.Int: {val = this.TryReadInt32(batches, this.ReadVariable, out int value) ? (this.Control.IsUnsigned ? (uint) value : value) : 0.0; break; }
+                case DataType.Long: {val = this.TryReadInt64(batches, this.ReadVariable, out long value) ? (this.Control.IsUnsigned ? (ulong) value : value) : 0.0; break; }
                 case DataType.Float: {val = this.TryReadFloat(batches, this.ReadVariable, out float value) ? value : 0.0; break; }
                 case DataType.Double: {val = this.TryReadDouble(batches, this.ReadVariable, out double value) ? value : 0.0; break; }
                 default: throw new ArgumentOutOfRangeException();
             }
             
             this.Control.Value = val;
-        }
-
-        public override void OnConnect() {
-        }
-
-        public override void OnDisconnect() {
         }
 
         public void SendNewValue(double value) {

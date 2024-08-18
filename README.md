@@ -27,35 +27,35 @@ On windows:
     dotnet build -c Debug -r linux-arm64 -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true
   
   Copy files from windows to raspberry pi via SCP:
-    scp -r bin\Debug\net8.0\linux-arm64\* <username>@<address>:/home/<username>/BlueberryBenchSupply
+    scp -r bin\Debug\net8.0\linux-arm64\* <username>@<address>:/home/<username>/JetTechMI
 
 On Raspberry PI:
   Setup permissions for application file
-    sudo chmod +x /home/<username>/BlueberryBenchSupply/BlueberryBenchSupply
+    sudo chmod +x /home/<username>/JetTechMI/JetTechMI
   
   Run the executable with --drm parameter for avalonia:
-    /home/<username>/BlueberryBenchSupply/BlueberryBenchSupply --drm
+    /home/<username>/JetTechMI/JetTechMI --drm
 
 For running the app when the Rasp PI boots, this is a bodged workaround but it works:
 Open the bash profile file:
     sudo nano ~/.bash_profile
 
 Then add this line:
-/home/<username>/BlueberryBenchSupply/BlueberryBenchSupply --drm
+/home/<username>/JetTechMI/JetTechMI --drm
 
 ```
 
 ## Principles
 The idea was that for each control there would be an instance of `IJtControlData` which would be used
 to implement the updating and batched data requests of a specific control. The `JtButton` class is one example.
-You shouldn't necessarily need to access code behind; you'd just need to have code somewhere to connect to your PLC
-and register it with the `JetTechContext` global instance.
 
 Controls are added to and removed from the `JtControlManager` global instance, which is what deals with the update loop
 and also deals with the batched update system.
 
-When using a page system, it's important to unregister controls that are no longer visible. 
-I will try and work on an automatic system for this
+The global `JetTechContext` instance is your PLC registry, which is where requests can be made to your PLC
+
+When using a page system, it's important to unregister controls that are no longer visible, 
+so that they do not take part in the update tick and affect performance. I will try and work on an automatic system for this
 
 ## Designing a UI
 For buttons, use `JtButton`. It has a `ReadVariable` (which determines the visible pressed state), a `WriteVariable` (which is used 
